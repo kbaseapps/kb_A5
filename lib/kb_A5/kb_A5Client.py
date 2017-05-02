@@ -41,13 +41,14 @@ class kb_A5(object):
            type "paired_end_lib" (The workspace object name of a
            PairedEndLibrary file, whether of the KBaseAssembly or KBaseFile
            type.), parameter "output_contigset_name" of String, parameter
-           "min_contig" of Long, parameter "opt_args" of type "opt_args_type"
-           (Input parameters for running A5. string workspace_name - the name
-           of the workspace from which to take input and store output.
-           list<paired_end_lib> read_libraries - Illumina PairedEndLibrary
-           files to assemble. string output_contigset_name - the name of the
-           output contigset) -> structure: parameter "min_span" of Long,
-           parameter "min_coverage" of Long, parameter "min_overlap" of Long
+           "min_contig_length" of Long, parameter "opt_args" of type
+           "opt_args_type" (Input parameters for running A5. string
+           workspace_name - the name of the workspace from which to take
+           input and store output. list<paired_end_lib> read_libraries -
+           Illumina PairedEndLibrary files to assemble. string
+           output_contigset_name - the name of the output contigset) ->
+           structure: parameter "begin" of Long, parameter "end" of Long,
+           parameter "preprocessed" of type "bool"
         :returns: instance of type "A5_Output" (Output parameters for A5 run.
            string report_name - the name of the KBaseReport.Report workspace
            object. string report_ref - the workspace reference of the

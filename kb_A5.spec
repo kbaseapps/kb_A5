@@ -10,6 +10,7 @@ module kb_A5 {
        KBaseAssembly or KBaseFile type.
     */
     typedef string paired_end_lib;
+    typedef int    bool;
 
     /* Input parameters for running A5.
         string workspace_name - the name of the workspace from which to take
@@ -19,16 +20,16 @@ module kb_A5 {
         string output_contigset_name - the name of the output contigset
     */
     typedef structure {
-        int min_span;       /* default 2000 */
-        int min_coverage;   /* default 3 */
-        int min_overlap;    /* default 2000 */
+        int  begin;           /* default 1-5 */
+        int  end;             /* default 1-5 */
+        bool preprocessed;    /* flag */
     } opt_args_type;
 
     typedef structure {
         string               workspace_name;
         list<paired_end_lib> read_libraries;                /*  input reads  */
         string               output_contigset_name;         /*  name of output contigs */
-        int                  min_contig;                    /*  (=200) minimum size of contig */
+        int                  min_contig_length;             /*  (=200) minimum size of contig */
         opt_args_type        opt_args;
     } A5_Params;
     

@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "workspace_name",
     "read_libraries",
     "output_contigset_name",
-    "min_contig",
+    "min_contig_length",
     "opt_args"
 })
 public class A5Params {
@@ -34,8 +34,8 @@ public class A5Params {
     private List<String> readLibraries;
     @JsonProperty("output_contigset_name")
     private java.lang.String outputContigsetName;
-    @JsonProperty("min_contig")
-    private Long minContig;
+    @JsonProperty("min_contig_length")
+    private Long minContigLength;
     /**
      * <p>Original spec-file type: opt_args_type</p>
      * <pre>
@@ -97,18 +97,18 @@ public class A5Params {
         return this;
     }
 
-    @JsonProperty("min_contig")
-    public Long getMinContig() {
-        return minContig;
+    @JsonProperty("min_contig_length")
+    public Long getMinContigLength() {
+        return minContigLength;
     }
 
-    @JsonProperty("min_contig")
-    public void setMinContig(Long minContig) {
-        this.minContig = minContig;
+    @JsonProperty("min_contig_length")
+    public void setMinContigLength(Long minContigLength) {
+        this.minContigLength = minContigLength;
     }
 
-    public A5Params withMinContig(Long minContig) {
-        this.minContig = minContig;
+    public A5Params withMinContigLength(Long minContigLength) {
+        this.minContigLength = minContigLength;
         return this;
     }
 
@@ -163,7 +163,7 @@ public class A5Params {
 
     @Override
     public java.lang.String toString() {
-        return ((((((((((((("A5Params"+" [workspaceName=")+ workspaceName)+", readLibraries=")+ readLibraries)+", outputContigsetName=")+ outputContigsetName)+", minContig=")+ minContig)+", optArgs=")+ optArgs)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((((("A5Params"+" [workspaceName=")+ workspaceName)+", readLibraries=")+ readLibraries)+", outputContigsetName=")+ outputContigsetName)+", minContigLength=")+ minContigLength)+", optArgs=")+ optArgs)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }

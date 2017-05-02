@@ -127,13 +127,14 @@ A5_Params is a reference to a hash where the following keys are defined:
 	workspace_name has a value which is a string
 	read_libraries has a value which is a reference to a list where each element is a kb_A5.paired_end_lib
 	output_contigset_name has a value which is a string
-	min_contig has a value which is an int
+	min_contig_length has a value which is an int
 	opt_args has a value which is a kb_A5.opt_args_type
 paired_end_lib is a string
 opt_args_type is a reference to a hash where the following keys are defined:
-	min_span has a value which is an int
-	min_coverage has a value which is an int
-	min_overlap has a value which is an int
+	begin has a value which is an int
+	end has a value which is an int
+	preprocessed has a value which is a kb_A5.bool
+bool is an int
 A5_Output is a reference to a hash where the following keys are defined:
 	report_name has a value which is a string
 	report_ref has a value which is a string
@@ -150,13 +151,14 @@ A5_Params is a reference to a hash where the following keys are defined:
 	workspace_name has a value which is a string
 	read_libraries has a value which is a reference to a list where each element is a kb_A5.paired_end_lib
 	output_contigset_name has a value which is a string
-	min_contig has a value which is an int
+	min_contig_length has a value which is an int
 	opt_args has a value which is a kb_A5.opt_args_type
 paired_end_lib is a string
 opt_args_type is a reference to a hash where the following keys are defined:
-	min_span has a value which is an int
-	min_coverage has a value which is an int
-	min_overlap has a value which is an int
+	begin has a value which is an int
+	end has a value which is an int
+	preprocessed has a value which is a kb_A5.bool
+bool is an int
 A5_Output is a reference to a hash where the following keys are defined:
 	report_name has a value which is a string
 	report_ref has a value which is a string
@@ -339,6 +341,32 @@ a string
 
 
 
+=head2 bool
+
+=over 4
+
+
+
+=item Definition
+
+=begin html
+
+<pre>
+an int
+</pre>
+
+=end html
+
+=begin text
+
+an int
+
+=end text
+
+=back
+
+
+
 =head2 opt_args_type
 
 =over 4
@@ -361,9 +389,9 @@ string output_contigset_name - the name of the output contigset
 
 <pre>
 a reference to a hash where the following keys are defined:
-min_span has a value which is an int
-min_coverage has a value which is an int
-min_overlap has a value which is an int
+begin has a value which is an int
+end has a value which is an int
+preprocessed has a value which is a kb_A5.bool
 
 </pre>
 
@@ -372,9 +400,9 @@ min_overlap has a value which is an int
 =begin text
 
 a reference to a hash where the following keys are defined:
-min_span has a value which is an int
-min_coverage has a value which is an int
-min_overlap has a value which is an int
+begin has a value which is an int
+end has a value which is an int
+preprocessed has a value which is a kb_A5.bool
 
 
 =end text
@@ -398,7 +426,7 @@ a reference to a hash where the following keys are defined:
 workspace_name has a value which is a string
 read_libraries has a value which is a reference to a list where each element is a kb_A5.paired_end_lib
 output_contigset_name has a value which is a string
-min_contig has a value which is an int
+min_contig_length has a value which is an int
 opt_args has a value which is a kb_A5.opt_args_type
 
 </pre>
@@ -411,7 +439,7 @@ a reference to a hash where the following keys are defined:
 workspace_name has a value which is a string
 read_libraries has a value which is a reference to a list where each element is a kb_A5.paired_end_lib
 output_contigset_name has a value which is a string
-min_contig has a value which is an int
+min_contig_length has a value which is an int
 opt_args has a value which is a kb_A5.opt_args_type
 
 

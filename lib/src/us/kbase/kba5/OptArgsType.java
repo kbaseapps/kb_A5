@@ -26,62 +26,62 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("com.googlecode.jsonschema2pojo")
 @JsonPropertyOrder({
-    "min_span",
-    "min_coverage",
-    "min_overlap"
+    "begin",
+    "end",
+    "preprocessed"
 })
 public class OptArgsType {
 
-    @JsonProperty("min_span")
-    private Long minSpan;
-    @JsonProperty("min_coverage")
-    private Long minCoverage;
-    @JsonProperty("min_overlap")
-    private Long minOverlap;
+    @JsonProperty("begin")
+    private Long begin;
+    @JsonProperty("end")
+    private Long end;
+    @JsonProperty("preprocessed")
+    private Long preprocessed;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    @JsonProperty("min_span")
-    public Long getMinSpan() {
-        return minSpan;
+    @JsonProperty("begin")
+    public Long getBegin() {
+        return begin;
     }
 
-    @JsonProperty("min_span")
-    public void setMinSpan(Long minSpan) {
-        this.minSpan = minSpan;
+    @JsonProperty("begin")
+    public void setBegin(Long begin) {
+        this.begin = begin;
     }
 
-    public OptArgsType withMinSpan(Long minSpan) {
-        this.minSpan = minSpan;
+    public OptArgsType withBegin(Long begin) {
+        this.begin = begin;
         return this;
     }
 
-    @JsonProperty("min_coverage")
-    public Long getMinCoverage() {
-        return minCoverage;
+    @JsonProperty("end")
+    public Long getEnd() {
+        return end;
     }
 
-    @JsonProperty("min_coverage")
-    public void setMinCoverage(Long minCoverage) {
-        this.minCoverage = minCoverage;
+    @JsonProperty("end")
+    public void setEnd(Long end) {
+        this.end = end;
     }
 
-    public OptArgsType withMinCoverage(Long minCoverage) {
-        this.minCoverage = minCoverage;
+    public OptArgsType withEnd(Long end) {
+        this.end = end;
         return this;
     }
 
-    @JsonProperty("min_overlap")
-    public Long getMinOverlap() {
-        return minOverlap;
+    @JsonProperty("preprocessed")
+    public Long getPreprocessed() {
+        return preprocessed;
     }
 
-    @JsonProperty("min_overlap")
-    public void setMinOverlap(Long minOverlap) {
-        this.minOverlap = minOverlap;
+    @JsonProperty("preprocessed")
+    public void setPreprocessed(Long preprocessed) {
+        this.preprocessed = preprocessed;
     }
 
-    public OptArgsType withMinOverlap(Long minOverlap) {
-        this.minOverlap = minOverlap;
+    public OptArgsType withPreprocessed(Long preprocessed) {
+        this.preprocessed = preprocessed;
         return this;
     }
 
@@ -97,7 +97,7 @@ public class OptArgsType {
 
     @Override
     public String toString() {
-        return ((((((((("OptArgsType"+" [minSpan=")+ minSpan)+", minCoverage=")+ minCoverage)+", minOverlap=")+ minOverlap)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((("OptArgsType"+" [begin=")+ begin)+", end=")+ end)+", preprocessed=")+ preprocessed)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }
