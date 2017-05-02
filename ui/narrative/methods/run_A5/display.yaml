@@ -1,0 +1,108 @@
+#
+# define display information
+#
+name: Assemble with A5
+tooltip: |
+    Assemble long reads using the ultrafast A5 assembler.
+screenshots: []
+
+icon: A5.png
+
+#
+# define a set of similar methods that might be useful to the user
+#
+suggestions:
+    apps:
+        related:
+            []
+        next:
+            []
+    methods:
+        related:
+            []
+        next:
+            [annotate_contigset]
+
+#
+# Configure the display and description of parameters
+#
+parameter-groups:
+        opt_args :
+                ui-name : |
+                        Optional Parameters
+                short-hint : |
+                        min_span, min_coverage and min_overlap
+                long-hint : |
+                        min_span, min_coverage and min_overlap
+
+parameters :
+    read_libraries :
+        ui-name : |
+            Read library
+        short-hint : |
+            The libraries of reads to be assembled. Reads length should be <= 512.
+        long-hint : |
+            The libraries of reads to be assembled. Reads length should be <= 512.
+    output_contigset_name :
+        ui-name : |
+            Output ContigSet
+        short-hint : |
+            The name under which the resulting ContigSet will be saved in the Narrative
+        long-hint : |
+            The name under which the resulting ContigSet will be saved in the Narrative
+    min_contig :
+        ui-name : |
+            Minimum Contig Length
+        short-hint : |
+            The shortest contig to accept in the resulting assembly object, should be < largest contig size
+        long-hint : |
+            The shortest contig to accept in the resulting assembly object, should be < largest contig size
+    min_span :
+        ui-name : |
+            min span
+        short-hint : |
+            min span
+        long-hint : |
+            min span
+    min_coverage :
+        ui-name : |
+            min coverage
+        short-hint : |
+            min coverage
+        long-hint : |
+            min coverage
+    min_overlap :
+        ui-name : |
+            min overlap
+        short-hint : |
+            min overlap
+        long-hint : |
+            min overlap
+
+
+#
+# Configure the display and description of parameters
+#
+
+description : |
+    <p>
+    This is a KBase wrapper for
+    <https://github.com/levinas/a5" target="_blank">A5</a>
+    </p>
+
+    <p>
+    A5 is an ultra-fast overlap-layout-consensus based de novo assembler for noisy long reads developed by Heng Li.
+    It has been shown to assemble ~50X microbial PacBio reads into a draft assembly of a small number of (sometimes 1)
+    contigs in a matter of minutes. A5 derives this performance from a locality-sensitive hashing based
+    overlapper implemented in minimap.
+    </p>
+    <p>
+    <b>Known limitations:</b>  A5 does not support short Illumina reads.
+    A5 is still in early development stage, and has only been tested on a dozen of PacBio and Oxford
+    Nanopore bacterial data sets. The consensus sequence computed by A5 may not be as accurate as slower and more mature methods such as HGAP3.
+    </p>
+
+publications :
+    -
+        display-text : |
+            <https://github.com/levinas/a5" target="_blank">https://github.com/levinas/a5</a>
