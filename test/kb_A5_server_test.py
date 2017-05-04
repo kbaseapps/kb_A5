@@ -490,6 +490,7 @@ class kb_A5Test(unittest.TestCase):
         self.nodes_to_delete.append(assembly_fasta_node)
         header = {"Authorization": "Oauth {0}".format(self.token)}
 
+        '''
         # the remote md5 happens to be different across runs
         fasta_node = requests.get(self.shockURL + '/node/' + assembly_fasta_node,
                                   headers=header, allow_redirects=True).json()
@@ -513,6 +514,8 @@ class kb_A5Test(unittest.TestCase):
                 # Need to see them to update the tests accordingly.
                 # If code gets here this test is designed to always fail, but show results.
                 self.assertEqual(str(assembly['data']['contigs']), "BLAH")
+        '''
+
 
 
 

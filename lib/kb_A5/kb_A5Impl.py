@@ -404,7 +404,8 @@ https://github.com/levinas/a5
 
         # parse the output and save back to KBase
 
-        output_contigs = os.path.join(outdir, a5_output_prefix + ".contigs.fasta")
+        #output_contigs = os.path.join(outdir, a5_output_prefix + ".contigs.fasta")
+        output_contigs = os.path.join(outdir, a5_output_prefix + ".final.scaffolds.fasta")
 
         min_contig_len = 0
 
