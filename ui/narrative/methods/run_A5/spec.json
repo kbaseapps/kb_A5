@@ -34,7 +34,7 @@
             }
         },
         {
-            "id": "min_contig",
+            "id": "min_contig_length",
             "optional": true,
             "advanced": true,
             "allow_multiple": false,
@@ -46,7 +46,7 @@
             }
         },
         {
-            "id": "min_span",
+            "id": "begin",
             "optional": false,
             "advanced": true,
             "allow_multiple": false,
@@ -58,7 +58,7 @@
             }
         },
         {
-            "id": "min_coverage",
+            "id": "end",
             "optional": false,
             "advanced": true,
             "allow_multiple": false,
@@ -70,7 +70,7 @@
             }
         },
         {
-            "id": "min_overlap",
+            "id": "preprocessed",
             "optional": false,
             "advanced": true,
             "allow_multiple": false,
@@ -86,7 +86,7 @@
     "parameter-groups": [
 	   {
 		"id": "opt_args",
-		"parameters": ["min_span", "min_coverage", "min_overlap"],
+		"parameters": ["begin", "end", "preprocessed"],
 	        "optional": true,
            "advanced": true,
 		"allow_multiple": false,
@@ -114,8 +114,8 @@
                     "target_property": "output_contigset_name"
                 },
                 {
-                    "input_parameter": "min_contig",
-                    "target_property": "min_contig"
+                    "input_parameter": "min_contig_length",
+                    "target_property": "min_contig_length"
                 },
                 {
                     "input_parameter": "opt_args",

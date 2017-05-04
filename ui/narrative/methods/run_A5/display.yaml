@@ -3,7 +3,7 @@
 #
 name: Assemble with A5
 tooltip: |
-    Assemble long reads using the ultrafast A5 assembler.
+    Assemble paired-end microbial reads using the A5 assembly pipeline.
 screenshots: []
 
 icon: A5.png
@@ -31,54 +31,39 @@ parameter-groups:
                 ui-name : |
                         Optional Parameters
                 short-hint : |
-                        min_span, min_coverage and min_overlap
-                long-hint : |
-                        min_span, min_coverage and min_overlap
+                        begin, end and preprocessed
 
 parameters :
     read_libraries :
         ui-name : |
             Read library
         short-hint : |
-            The libraries of reads to be assembled. Reads length should be <= 512.
-        long-hint : |
-            The libraries of reads to be assembled. Reads length should be <= 512.
+            The libraries of reads to be assembled.
     output_contigset_name :
         ui-name : |
             Output ContigSet
         short-hint : |
             The name under which the resulting ContigSet will be saved in the Narrative
-        long-hint : |
-            The name under which the resulting ContigSet will be saved in the Narrative
-    min_contig :
+    min_contig_length :
         ui-name : |
             Minimum Contig Length
         short-hint : |
             The shortest contig to accept in the resulting assembly object, should be < largest contig size
-        long-hint : |
-            The shortest contig to accept in the resulting assembly object, should be < largest contig size
-    min_span :
+    begin :
         ui-name : |
-            min span
+            begin
         short-hint : |
-            min span
-        long-hint : |
-            min span
-    min_coverage :
+            begin
+    end :
         ui-name : |
-            min coverage
+            end
         short-hint : |
-            min coverage
-        long-hint : |
-            min coverage
-    min_overlap :
+            end
+    preprocessed :
         ui-name : |
-            min overlap
+            preprocessed
         short-hint : |
-            min overlap
-        long-hint : |
-            min overlap
-
+            preprocessed
 
 #
 # Configure the display and description of parameters
@@ -87,22 +72,27 @@ parameters :
 description : |
     <p>
     This is a KBase wrapper for
-    <https://github.com/levinas/a5" target="_blank">A5</a>
+    <https://github.com/levinas/a5" target="_blank">A5-miseq</a>
     </p>
 
     <p>
-    A5 is an ultra-fast overlap-layout-consensus based de novo assembler for noisy long reads developed by Heng Li.
-    It has been shown to assemble ~50X microbial PacBio reads into a draft assembly of a small number of (sometimes 1)
-    contigs in a matter of minutes. A5 derives this performance from a locality-sensitive hashing based
-    overlapper implemented in minimap.
+    A5-miseq is an updated version of the original A5 microbial assembly pipeline.
+    A5-miseq is good for high-quality microbial genome assembly and does so without
+    the need for parameter tuning on the part of the user. It is an integrated meta-assembly
+    pipeline consisting of the following steps and tools: (1) Read cleaning with Trimmomatic;
+    (2) Error correction with SGA; (3) Contig assembly with IDBA-UD; (4) Crude scaffolding with SSPACE;
+    (5) Misassembly correction based on read mapping using BWA; and (6) Final scaffolding with stringent
+    parameters reparing previously broken contigs.
     </p>
     <p>
-    <b>Known limitations:</b>  A5 does not support short Illumina reads.
-    A5 is still in early development stage, and has only been tested on a dozen of PacBio and Oxford
-    Nanopore bacterial data sets. The consensus sequence computed by A5 may not be as accurate as slower and more mature methods such as HGAP3.
-    </p>
+    <b>Known limitations:</b>  A5-miseq is known to crash on some datasets due to the vulnerability associated with
+    integrating a large number of third-party tools in its workflow. Due to a compatibility issue, A5-miseq is
+    known to not work on the example read library rhodo.art.q20.int.PE.reads. This is because the simulated
+    read library has stretched quality scores that do not play well with the SGA component in error correction.
+     Another example paired-end library rhodo.art.q10.PE.reads, however, should work in this method.</p>
 
 publications :
     -
         display-text : |
-            <https://github.com/levinas/a5" target="_blank">https://github.com/levinas/a5</a>
+            Coil, D., Jospin, G. and Darling, A.E., (2014). A5-miseq: an updated pipeline to assemble microbial genomes
+            from Illumina MiSeq data. Bioinformatics, p.btu661.
