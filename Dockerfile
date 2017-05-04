@@ -5,7 +5,7 @@ MAINTAINER KBase Developer
 # Insert apt-get instructions here to install
 # any required dependencies for your module.
 
-#RUN apt-get update -y
+RUN apt-get update -y
 
 RUN sudo apt-get install -y python-dev libffi-dev libssl-dev
 RUN pip install --upgrade pip
@@ -18,7 +18,8 @@ RUN pip install requests --upgrade \
     && pip install 'requests[security]' --upgrade \
     && pip install ipython \
     && apt-get install -y nano \
-    && pip install psutil
+    && pip install psutil \
+    && apt-get install perl-modules libperl4-corelibs-perl
 
 # -----------------------------------------
 
