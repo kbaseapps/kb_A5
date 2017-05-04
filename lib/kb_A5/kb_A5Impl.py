@@ -48,7 +48,7 @@ https://github.com/levinas/a5
     ######################################### noqa
     VERSION = "0.0.1"
     GIT_URL = "https://github.com/ugswork/kb_A5.git"
-    GIT_COMMIT_HASH = "9ac2c3f1065bbbee41e14837193b1ba7a33175fe"
+    GIT_COMMIT_HASH = "69585a631b89b7c480b15f7f0ec5988c0e8c6149"
 
     #BEGIN_CLASS_HEADER
     # Class variables and functions can be defined in this block
@@ -81,55 +81,6 @@ https://github.com/levinas/a5
               str(time.time()) + ': ' + str(message))
 
 
-    def exec_minimap(self, input_reads, outdir):
-
-        if not os.path.exists(outdir):
-            os.makedirs(outdir)
-
-        minimap_outfile = os.path.join(outdir, 'minimap-output.gz')
-
-        minimap_cmd1 = ['minimap', '-Sw5', '-L100', '-m0', '-t8',
-                        input_reads['fwd_file'], input_reads['fwd_file']]
-
-        minimap_cmd2 = ['gzip', '-1']
-
-        print("minimap CMD:  " + str(minimap_cmd1) + str(minimap_cmd2) + "  outfile: " + minimap_outfile)
-        self.log(minimap_cmd1)
-        self.log(minimap_cmd2)
-
-        minimap_of = open(minimap_outfile, 'wb')
-
-        if self.DISABLE_MINIMAP_OUTPUT:
-            with open(os.devnull, 'w') as null:
-                p1 = subprocess.Popen(minimap_cmd1, cwd=self.scratch, shell=False,
-                                      stdout=subprocess.PIPE, stderr=null)
-
-                p2 = subprocess.Popen(minimap_cmd2, cwd=self.scratch, shell=False,
-                                      stdin=p1.stdout, stdout=minimap_of, close_fds=True, stderr=null)
-        else:
-
-            p1 = subprocess.Popen(minimap_cmd1, cwd=self.scratch, shell=False,
-                                  stdout=subprocess.PIPE)
-
-            p2 = subprocess.Popen(minimap_cmd2, cwd=self.scratch, shell=False,
-                                  stdin=p1.stdout, stdout=minimap_of, close_fds=True)
-
-        retcode1 = p1.wait()
-        p1.stdout.close()
-
-        if p1.returncode != 0:
-            raise ValueError('Error running minimap, return code: ' +
-                             str(retcode1) + '\n')
-
-        retcode2 = p2.wait()
-
-        if p2.returncode != 0:
-            raise ValueError('Error running gzip, return code: ' +
-                             str(retcode2) + '\n')
-
-        return minimap_outfile
-
-
     def exec_A5(self, reads_data, params_in, outdir):
 
         #threads = psutil.cpu_count() * self.THREADS_PER_CORE
@@ -156,16 +107,14 @@ https://github.com/levinas/a5
         # first convert input reads_data from fastq to paf
         # output of minimap saved in minimap_outfile
 
-        minimap_outfile = self.exec_minimap(reads_data[0], outdir)
-
-        a5_gfa_outfile = os.path.join(outdir, 'A5_output.gfa')
+        a5_output = params_in[self.PARAM_IN_CS_NAME]
 
         # use minimap_outfile as input to A5 assembler
         # output file from the assembler saved in a5_gfa_outfile
 
-        a5_cmd = ['a5', '-f', reads_data[0]['fwd_file'],
-                       minimap_outfile]
-
+        a5_cmd = ['a5_pipeline.pl', reads_data[0]['fwd_file'], reads_data[0]['rev_file'],
+                       a5_output]
+        '''
         if self.PARAM_IN_OPT_ARGS in params_in and params_in[self.PARAM_IN_OPT_ARGS] is not None:
             oargs = params_in[self.PARAM_IN_OPT_ARGS]
 
@@ -180,18 +129,17 @@ https://github.com/levinas/a5
             if int(oargs[self.PARAM_IN_MIN_OVERLAP]) > 0:
                 a5_cmd.append('-o')
                 a5_cmd.append(str(oargs[self.PARAM_IN_MIN_OVERLAP]))
+        '''
 
-        print("\nA5 CMD:     " + str(a5_cmd) + "Outfile: " + a5_gfa_outfile)
+        print("\nA5 CMD:     " + str(a5_cmd))
         self.log(a5_cmd)
-
-        a5_gfa_of = open(a5_gfa_outfile, 'wb')
 
         if self.DISABLE_A5_OUTPUT:
             with open(os.devnull, 'w') as null:
-                p = subprocess.Popen(a5_cmd, cwd=self.scratch, shell=False,
-                                     stdout=a5_gfa_of, close_fds=True, stderr=null)
+                p = subprocess.Popen(a5_cmd, cwd=outdir, shell=False,
+                                     stdout=null, stderr=null)
         else:
-            p = subprocess.Popen(a5_cmd, cwd=self.scratch, shell=False, stdout=a5_gfa_of, close_fds=True)
+            p = subprocess.Popen(a5_cmd, cwd=outdir, shell=False)
         retcode = p.wait()
 
         self.log('Return code: ' + str(retcode))
@@ -199,24 +147,7 @@ https://github.com/levinas/a5
             raise ValueError('Error running A5, return code: ' +
                              str(retcode) + '\n')
 
-        a5_fasta_outfile = os.path.join(outdir, 'A5_fasta_output.fa')
-        a5_fa_of = open(a5_fasta_outfile, 'wb')
-        gfa2fa_cmd = 'awk \'/^S/{print ">"$2"\\n"$3}\'  ' + a5_gfa_outfile + ' | fold '
-
-        if self.DISABLE_A5_OUTPUT:
-            with open(os.devnull, 'w') as null:
-                p = subprocess.Popen(gfa2fa_cmd, cwd=self.scratch, shell=False,
-                                     stdout=a5_fa_of, close_fds=True, stderr=null)
-        else:
-            p = subprocess.Popen(gfa2fa_cmd, cwd=self.scratch, shell=True, stdout=a5_fa_of, close_fds=True)
-        retcode = p.wait()
-
-        self.log('Return code: ' + str(retcode))
-        if p.returncode != 0:
-            raise ValueError('Error running gfa2fa, return code: ' +
-                             str(retcode) + '\n')
-
-        return a5_fasta_outfile
+        return a5_output
 
 
     # adapted from
@@ -334,7 +265,7 @@ https://github.com/levinas/a5
         if self.PARAM_IN_MIN_CONTIG in params:
             if not isinstance(params[self.PARAM_IN_MIN_CONTIG], int):
                 raise ValueError('min_contig must be of type int')
-
+        '''
         if self.PARAM_IN_OPT_ARGS in params and params[self.PARAM_IN_OPT_ARGS] is not None:
             oargs = params[self.PARAM_IN_OPT_ARGS]
             if not isinstance(oargs[self.PARAM_IN_MIN_SPAN], int):
@@ -343,6 +274,7 @@ https://github.com/levinas/a5
                 raise ValueError('min coverage must be of type int')
             if not isinstance(oargs[self.PARAM_IN_MIN_OVERLAP], int):
                 raise ValueError('min overlap must be of type int')
+        '''
 
     #END_CLASS_HEADER
 
@@ -425,7 +357,7 @@ https://github.com/levinas/a5
                    'KBaseAssembly.PairedEndLibrary')
         try:
             reads = readcli.download_reads({'read_libraries': reads_params,
-                                            'interleaved': 'true',
+                                            'interleaved': 'false',
                                             'gzipped': None
                                             })['files']
         except ServerError as se:
@@ -467,12 +399,12 @@ https://github.com/levinas/a5
 
         outdir = os.path.join(self.scratch, 'A5_dir')
 
-        a5_outfile = self.exec_A5(reads_data, params, outdir)
-        self.log('A5 output dir: ' + a5_outfile)
+        a5_output_prefix = self.exec_A5(reads_data, params, outdir)
+        self.log('A5 output dir: ' + a5_output_prefix)
 
         # parse the output and save back to KBase
 
-        output_contigs = a5_outfile
+        output_contigs = os.path.join(outdir, a5_output_prefix + ".contigs.fasta")
 
         min_contig_len = 0
 
