@@ -328,16 +328,15 @@ class kb_A5Test(unittest.TestCase):
         self.run_success(
             ['phiX_reads'], 'phiX_A5_output',
             {'contigs':
-             [{'name': 'utg000001l',
-               'length': 4830022,
-               'id': 'utg000001l',
-               'md5': '648da37c8d4b8d747a03d5334a0491e4'
+             [{'name': 'node0_4_2_358413',
+               'length': 5469,
+               'id': 'node0_4_2_358413',
+               'md5': '4e1621ec0c74d80ec4fbb205feee68e2'
                }],
-             'md5': '62233009d24b3a52174d56c194b084ca',
-             'remote_md5': 'eb14ea92a070e07b96bfd56739b47e48'
+             'md5': 'f0fbe971bd000f78d7c602a2a6926a3a',
+             'remote_md5': '801512cb01b3f8c5d1740a8bca083056'
              },
-            200,
-            {'min_span':2000, 'min_coverage':3, 'min_overlap': 2000} )
+            200 )
 
     def test_no_workspace_param(self):
 
@@ -491,7 +490,6 @@ class kb_A5Test(unittest.TestCase):
         self.nodes_to_delete.append(assembly_fasta_node)
         header = {"Authorization": "Oauth {0}".format(self.token)}
 
-        '''
         # the remote md5 happens to be different across runs
         fasta_node = requests.get(self.shockURL + '/node/' + assembly_fasta_node,
                                   headers=header, allow_redirects=True).json()
@@ -515,7 +513,7 @@ class kb_A5Test(unittest.TestCase):
                 # Need to see them to update the tests accordingly.
                 # If code gets here this test is designed to always fail, but show results.
                 self.assertEqual(str(assembly['data']['contigs']), "BLAH")
-        '''
+
 
 
 
