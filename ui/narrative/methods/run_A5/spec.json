@@ -44,57 +44,10 @@
                 "validate_as" : "int",
 		        "min_int" : 0
             }
-        },
-        {
-            "id": "begin",
-            "optional": false,
-            "advanced": true,
-            "allow_multiple": false,
-            "default_values": [ "2000" ],
-            "field_type": "text",
-            "text_options": {
-                "validate_as" : "int",
-		        "min_int" : 1
-            }
-        },
-        {
-            "id": "end",
-            "optional": false,
-            "advanced": true,
-            "allow_multiple": false,
-            "default_values": [ "3" ],
-            "field_type": "text",
-            "text_options": {
-                "validate_as" : "int",
-		        "min_int" : 1
-            }
-        },
-        {
-            "id": "preprocessed",
-            "optional": false,
-            "advanced": true,
-            "allow_multiple": false,
-            "default_values": [ "2000" ],
-            "field_type": "text",
-            "text_options": {
-                "validate_as" : "int",
-		        "min_int" : 1
-            }
         }
     ],
 
-    "parameter-groups": [
-	   {
-		"id": "opt_args",
-		"parameters": ["begin", "end", "preprocessed"],
-	        "optional": true,
-           "advanced": true,
-		"allow_multiple": false,
-		"with_border": true
-	   }
-    ],
-
-   "behavior": {
+    "behavior": {
         "service-mapping": {
             "url": "",
             "name": "kb_A5",
@@ -116,10 +69,6 @@
                 {
                     "input_parameter": "min_contig_length",
                     "target_property": "min_contig_length"
-                },
-                {
-                    "input_parameter": "opt_args",
-                    "target_property": "opt_args"
                 }
             ],
             "output_mapping": [

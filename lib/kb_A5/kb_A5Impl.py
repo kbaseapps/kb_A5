@@ -48,7 +48,7 @@ https://github.com/levinas/a5
     ######################################### noqa
     VERSION = "0.0.1"
     GIT_URL = "https://github.com/ugswork/kb_A5.git"
-    GIT_COMMIT_HASH = "69585a631b89b7c480b15f7f0ec5988c0e8c6149"
+    GIT_COMMIT_HASH = "15cb3b52456f6569366a5ade831ce6027d2286d0"
 
     #BEGIN_CLASS_HEADER
     # Class variables and functions can be defined in this block
@@ -59,10 +59,6 @@ https://github.com/levinas/a5
     PARAM_IN_LIB = 'read_libraries'
     PARAM_IN_CS_NAME = 'output_contigset_name'
     PARAM_IN_MIN_CONTIG = 'min_contig'
-    PARAM_IN_OPT_ARGS = 'opt_args'
-    PARAM_IN_MIN_SPAN = 'min_span'
-    PARAM_IN_MIN_COVERAGE = 'min_coverage'
-    PARAM_IN_MIN_OVERLAP = 'min_overlap'
 
     INVALID_WS_OBJ_NAME_RE = re.compile('[^\\w\\|._-]')
     INVALID_WS_NAME_RE = re.compile('[^\\w:._-]')
@@ -91,7 +87,7 @@ https://github.com/levinas/a5
         # The fq2fa can only be run on a single library
         # The library must be paired end.
 
-        if len(reads_data) > 1:  #or reads_data[0]['type'] != 'paired':
+        if len(reads_data) > 1 or reads_data[0]['type'] != 'paired':
             error_msg = 'A5 assembly requires that one and ' + \
                             'only one paired end library as input.'
             if len(reads_data) > 1:
@@ -114,22 +110,6 @@ https://github.com/levinas/a5
 
         a5_cmd = ['a5_pipeline.pl', reads_data[0]['fwd_file'], reads_data[0]['rev_file'],
                        a5_output]
-        '''
-        if self.PARAM_IN_OPT_ARGS in params_in and params_in[self.PARAM_IN_OPT_ARGS] is not None:
-            oargs = params_in[self.PARAM_IN_OPT_ARGS]
-
-            if int(oargs[self.PARAM_IN_MIN_SPAN]) > 0:
-                a5_cmd.append('-s')
-                a5_cmd.append(str(oargs[self.PARAM_IN_MIN_SPAN]))
-
-            if int(oargs[self.PARAM_IN_MIN_COVERAGE]) > 0:
-                a5_cmd.append('-c')
-                a5_cmd.append(str(oargs[self.PARAM_IN_MIN_COVERAGE]))
-
-            if int(oargs[self.PARAM_IN_MIN_OVERLAP]) > 0:
-                a5_cmd.append('-o')
-                a5_cmd.append(str(oargs[self.PARAM_IN_MIN_OVERLAP]))
-        '''
 
         print("\nA5 CMD:     " + str(a5_cmd))
         self.log(a5_cmd)
@@ -265,16 +245,7 @@ https://github.com/levinas/a5
         if self.PARAM_IN_MIN_CONTIG in params:
             if not isinstance(params[self.PARAM_IN_MIN_CONTIG], int):
                 raise ValueError('min_contig must be of type int')
-        '''
-        if self.PARAM_IN_OPT_ARGS in params and params[self.PARAM_IN_OPT_ARGS] is not None:
-            oargs = params[self.PARAM_IN_OPT_ARGS]
-            if not isinstance(oargs[self.PARAM_IN_MIN_SPAN], int):
-                raise ValueError('min span must be of type int')
-            if not isinstance(oargs[self.PARAM_IN_MIN_COVERAGE], int):
-                raise ValueError('min coverage must be of type int')
-            if not isinstance(oargs[self.PARAM_IN_MIN_OVERLAP], int):
-                raise ValueError('min overlap must be of type int')
-        '''
+
 
     #END_CLASS_HEADER
 
@@ -297,19 +268,17 @@ https://github.com/levinas/a5
     def run_A5(self, ctx, params):
         """
         Run A5 on paired end libraries
-        :param params: instance of type "A5_Params" -> structure: parameter
-           "workspace_name" of String, parameter "read_libraries" of list of
-           type "paired_end_lib" (The workspace object name of a
-           PairedEndLibrary file, whether of the KBaseAssembly or KBaseFile
-           type.), parameter "output_contigset_name" of String, parameter
-           "min_contig_length" of Long, parameter "opt_args" of type
-           "opt_args_type" (Input parameters for running A5. string
-           workspace_name - the name of the workspace from which to take
-           input and store output. list<paired_end_lib> read_libraries -
-           Illumina PairedEndLibrary files to assemble. string
-           output_contigset_name - the name of the output contigset) ->
-           structure: parameter "begin" of Long, parameter "end" of Long,
-           parameter "preprocessed" of type "bool"
+        :param params: instance of type "A5_Params" (Input parameters for
+           running A5. string workspace_name - the name of the workspace from
+           which to take input and store output. list<paired_end_lib>
+           read_libraries - Illumina PairedEndLibrary files to assemble.
+           string output_contigset_name - the name of the output contigset)
+           -> structure: parameter "workspace_name" of String, parameter
+           "read_libraries" of list of type "paired_end_lib" (The workspace
+           object name of a PairedEndLibrary file, whether of the
+           KBaseAssembly or KBaseFile type.), parameter
+           "output_contigset_name" of String, parameter "min_contig_length"
+           of Long
         :returns: instance of type "A5_Output" (Output parameters for A5 run.
            string report_name - the name of the KBaseReport.Report workspace
            object. string report_ref - the workspace reference of the
@@ -404,8 +373,8 @@ https://github.com/levinas/a5
 
         # parse the output and save back to KBase
 
-        #output_contigs = os.path.join(outdir, a5_output_prefix + ".contigs.fasta")
-        output_contigs = os.path.join(outdir, a5_output_prefix + ".final.scaffolds.fasta")
+        output_contigs = os.path.join(outdir, a5_output_prefix + ".contigs.fasta")
+        #output_contigs = os.path.join(outdir, a5_output_prefix + ".final.scaffolds.fasta")
 
         min_contig_len = 0
 

@@ -26,12 +26,6 @@ suggestions:
 #
 # Configure the display and description of parameters
 #
-parameter-groups:
-        opt_args :
-                ui-name : |
-                        Optional Parameters
-                short-hint : |
-                        begin, end and preprocessed
 
 parameters :
     read_libraries :
@@ -49,21 +43,6 @@ parameters :
             Minimum Contig Length
         short-hint : |
             The shortest contig to accept in the resulting assembly object, should be < largest contig size
-    begin :
-        ui-name : |
-            begin
-        short-hint : |
-            begin
-    end :
-        ui-name : |
-            end
-        short-hint : |
-            end
-    preprocessed :
-        ui-name : |
-            preprocessed
-        short-hint : |
-            preprocessed
 
 #
 # Configure the display and description of parameters

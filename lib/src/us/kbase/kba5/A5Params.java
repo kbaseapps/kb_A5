@@ -14,7 +14,14 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
  * <p>Original spec-file type: A5_Params</p>
- * 
+ * <pre>
+ * Input parameters for running A5.
+ * string workspace_name - the name of the workspace from which to take
+ *    input and store output.
+ * list<paired_end_lib> read_libraries - Illumina PairedEndLibrary files
+ *     to assemble.
+ * string output_contigset_name - the name of the output contigset
+ * </pre>
  * 
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -23,8 +30,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "workspace_name",
     "read_libraries",
     "output_contigset_name",
-    "min_contig_length",
-    "opt_args"
+    "min_contig_length"
 })
 public class A5Params {
 
@@ -36,20 +42,6 @@ public class A5Params {
     private java.lang.String outputContigsetName;
     @JsonProperty("min_contig_length")
     private Long minContigLength;
-    /**
-     * <p>Original spec-file type: opt_args_type</p>
-     * <pre>
-     * Input parameters for running A5.
-     * string workspace_name - the name of the workspace from which to take
-     *    input and store output.
-     * list<paired_end_lib> read_libraries - Illumina PairedEndLibrary files
-     *     to assemble.
-     * string output_contigset_name - the name of the output contigset
-     * </pre>
-     * 
-     */
-    @JsonProperty("opt_args")
-    private OptArgsType optArgs;
     private Map<java.lang.String, Object> additionalProperties = new HashMap<java.lang.String, Object>();
 
     @JsonProperty("workspace_name")
@@ -112,45 +104,6 @@ public class A5Params {
         return this;
     }
 
-    /**
-     * <p>Original spec-file type: opt_args_type</p>
-     * <pre>
-     * Input parameters for running A5.
-     * string workspace_name - the name of the workspace from which to take
-     *    input and store output.
-     * list<paired_end_lib> read_libraries - Illumina PairedEndLibrary files
-     *     to assemble.
-     * string output_contigset_name - the name of the output contigset
-     * </pre>
-     * 
-     */
-    @JsonProperty("opt_args")
-    public OptArgsType getOptArgs() {
-        return optArgs;
-    }
-
-    /**
-     * <p>Original spec-file type: opt_args_type</p>
-     * <pre>
-     * Input parameters for running A5.
-     * string workspace_name - the name of the workspace from which to take
-     *    input and store output.
-     * list<paired_end_lib> read_libraries - Illumina PairedEndLibrary files
-     *     to assemble.
-     * string output_contigset_name - the name of the output contigset
-     * </pre>
-     * 
-     */
-    @JsonProperty("opt_args")
-    public void setOptArgs(OptArgsType optArgs) {
-        this.optArgs = optArgs;
-    }
-
-    public A5Params withOptArgs(OptArgsType optArgs) {
-        this.optArgs = optArgs;
-        return this;
-    }
-
     @JsonAnyGetter
     public Map<java.lang.String, Object> getAdditionalProperties() {
         return this.additionalProperties;
@@ -163,7 +116,7 @@ public class A5Params {
 
     @Override
     public java.lang.String toString() {
-        return ((((((((((((("A5Params"+" [workspaceName=")+ workspaceName)+", readLibraries=")+ readLibraries)+", outputContigsetName=")+ outputContigsetName)+", minContigLength=")+ minContigLength)+", optArgs=")+ optArgs)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((("A5Params"+" [workspaceName=")+ workspaceName)+", readLibraries=")+ readLibraries)+", outputContigsetName=")+ outputContigsetName)+", minContigLength=")+ minContigLength)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }
