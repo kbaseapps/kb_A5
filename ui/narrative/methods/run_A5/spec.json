@@ -106,7 +106,7 @@
         {
 	      "id": "libfile_args",
 	      "parameters": ["libfile_library","libfile_unpaired","libfile_insert"],
-	      "optional": false,
+	      "optional": true,
 	      "allow_multiple": true,
 	      "with_border": true
 	    }

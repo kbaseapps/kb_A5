@@ -45,17 +45,17 @@ parameters :
             Pipeline step to begin
     step_end :
         ui-name : |
-            Minimum Contig Length
+            End
         short-hint : |
             Pipeline step to end
     libfile_library :
         ui-name : |
-            libfile library
+            Reads Library
         short-hint : |
-            single or paired
+            Single or paired end library
     libfile_unpaired :
         ui-name : |
-            libfile unpaired
+            Optional unpaired
         short-hint : |
             single
     libfile_insert :
@@ -71,7 +71,7 @@ parameter-groups :
             Input libraries
 
     pipeline_args :
-        ui-name : Pipeline steps - begin and end
+        ui-name : Pipeline Parameters
         short-hint : |
             Steps of assembly pipeline to begin and end
 
