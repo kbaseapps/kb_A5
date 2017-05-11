@@ -98,7 +98,7 @@
     "parameter-groups": [
 	    {
 	      "id": "libfile_args",
-	      "parameters": ["libfile_library","libfile_unpaired","libfile_insert"],
+	      "parameters": ["libfile_library", "libfile_insert"],
 	      "optional": false,
 	      "allow_multiple": true,
 	      "with_border": true
