@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * Input parameters for running A5.
  * string workspace_name - the name of the workspace from which to take
  *    input and store output.
- * list<paired_end_lib> read_libraries - Illumina PairedEndLibrary files
+ * list<libfile_args_type> list of entries in the libfile - SingleEndLibrary or PairedEndLibrary files
  *     to assemble.
  * string output_contigset_name - the name of the output contigset
  * </pre>
@@ -28,63 +28,56 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Generated("com.googlecode.jsonschema2pojo")
 @JsonPropertyOrder({
     "workspace_name",
-    "read_libraries",
     "output_contigset_name",
-    "min_contig_length"
+    "min_contig_length",
+    "libfile_args",
+    "pipeline_args"
 })
 public class A5Params {
 
     @JsonProperty("workspace_name")
-    private java.lang.String workspaceName;
-    @JsonProperty("read_libraries")
-    private List<String> readLibraries;
+    private String workspaceName;
     @JsonProperty("output_contigset_name")
-    private java.lang.String outputContigsetName;
+    private String outputContigsetName;
     @JsonProperty("min_contig_length")
     private Long minContigLength;
-    private Map<java.lang.String, Object> additionalProperties = new HashMap<java.lang.String, Object>();
+    @JsonProperty("libfile_args")
+    private List<LibfileArgsType> libfileArgs;
+    /**
+     * <p>Original spec-file type: pipeline_args_type</p>
+     * 
+     * 
+     */
+    @JsonProperty("pipeline_args")
+    private PipelineArgsType pipelineArgs;
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     @JsonProperty("workspace_name")
-    public java.lang.String getWorkspaceName() {
+    public String getWorkspaceName() {
         return workspaceName;
     }
 
     @JsonProperty("workspace_name")
-    public void setWorkspaceName(java.lang.String workspaceName) {
+    public void setWorkspaceName(String workspaceName) {
         this.workspaceName = workspaceName;
     }
 
-    public A5Params withWorkspaceName(java.lang.String workspaceName) {
+    public A5Params withWorkspaceName(String workspaceName) {
         this.workspaceName = workspaceName;
-        return this;
-    }
-
-    @JsonProperty("read_libraries")
-    public List<String> getReadLibraries() {
-        return readLibraries;
-    }
-
-    @JsonProperty("read_libraries")
-    public void setReadLibraries(List<String> readLibraries) {
-        this.readLibraries = readLibraries;
-    }
-
-    public A5Params withReadLibraries(List<String> readLibraries) {
-        this.readLibraries = readLibraries;
         return this;
     }
 
     @JsonProperty("output_contigset_name")
-    public java.lang.String getOutputContigsetName() {
+    public String getOutputContigsetName() {
         return outputContigsetName;
     }
 
     @JsonProperty("output_contigset_name")
-    public void setOutputContigsetName(java.lang.String outputContigsetName) {
+    public void setOutputContigsetName(String outputContigsetName) {
         this.outputContigsetName = outputContigsetName;
     }
 
-    public A5Params withOutputContigsetName(java.lang.String outputContigsetName) {
+    public A5Params withOutputContigsetName(String outputContigsetName) {
         this.outputContigsetName = outputContigsetName;
         return this;
     }
@@ -104,19 +97,59 @@ public class A5Params {
         return this;
     }
 
+    @JsonProperty("libfile_args")
+    public List<LibfileArgsType> getLibfileArgs() {
+        return libfileArgs;
+    }
+
+    @JsonProperty("libfile_args")
+    public void setLibfileArgs(List<LibfileArgsType> libfileArgs) {
+        this.libfileArgs = libfileArgs;
+    }
+
+    public A5Params withLibfileArgs(List<LibfileArgsType> libfileArgs) {
+        this.libfileArgs = libfileArgs;
+        return this;
+    }
+
+    /**
+     * <p>Original spec-file type: pipeline_args_type</p>
+     * 
+     * 
+     */
+    @JsonProperty("pipeline_args")
+    public PipelineArgsType getPipelineArgs() {
+        return pipelineArgs;
+    }
+
+    /**
+     * <p>Original spec-file type: pipeline_args_type</p>
+     * 
+     * 
+     */
+    @JsonProperty("pipeline_args")
+    public void setPipelineArgs(PipelineArgsType pipelineArgs) {
+        this.pipelineArgs = pipelineArgs;
+    }
+
+    public A5Params withPipelineArgs(PipelineArgsType pipelineArgs) {
+        this.pipelineArgs = pipelineArgs;
+        return this;
+    }
+
     @JsonAnyGetter
-    public Map<java.lang.String, Object> getAdditionalProperties() {
+    public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
     }
 
     @JsonAnySetter
-    public void setAdditionalProperties(java.lang.String name, Object value) {
+    public void setAdditionalProperties(String name, Object value) {
         this.additionalProperties.put(name, value);
     }
 
     @Override
-    public java.lang.String toString() {
-        return ((((((((((("A5Params"+" [workspaceName=")+ workspaceName)+", readLibraries=")+ readLibraries)+", outputContigsetName=")+ outputContigsetName)+", minContigLength=")+ minContigLength)+", additionalProperties=")+ additionalProperties)+"]");
+    public String toString() {
+        return ((((((((((((("A5Params"+" [workspaceName=")+ workspaceName)+", outputContigsetName=")+ outputContigsetName)+", minContigLength=")+ minContigLength)+", libfileArgs=")+ libfileArgs)+", pipelineArgs=")+ pipelineArgs)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }

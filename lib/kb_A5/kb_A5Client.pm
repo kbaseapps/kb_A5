@@ -125,10 +125,19 @@ $params is a kb_A5.A5_Params
 $output is a kb_A5.A5_Output
 A5_Params is a reference to a hash where the following keys are defined:
 	workspace_name has a value which is a string
-	read_libraries has a value which is a reference to a list where each element is a kb_A5.paired_end_lib
 	output_contigset_name has a value which is a string
 	min_contig_length has a value which is an int
-paired_end_lib is a string
+	libfile_args has a value which is a reference to a list where each element is a kb_A5.libfile_args_type
+	pipeline_args has a value which is a kb_A5.pipeline_args_type
+libfile_args_type is a reference to a hash where the following keys are defined:
+	libfile_library has a value which is a kb_A5.single_or_paired_end_lib
+	libfile_unpaired has a value which is a kb_A5.single_end_lib
+	libfile_insert has a value which is an int
+single_or_paired_end_lib is a string
+single_end_lib is a string
+pipeline_args_type is a reference to a hash where the following keys are defined:
+	step_begin has a value which is an int
+	step_end has a value which is an int
 A5_Output is a reference to a hash where the following keys are defined:
 	report_name has a value which is a string
 	report_ref has a value which is a string
@@ -143,10 +152,19 @@ $params is a kb_A5.A5_Params
 $output is a kb_A5.A5_Output
 A5_Params is a reference to a hash where the following keys are defined:
 	workspace_name has a value which is a string
-	read_libraries has a value which is a reference to a list where each element is a kb_A5.paired_end_lib
 	output_contigset_name has a value which is a string
 	min_contig_length has a value which is an int
-paired_end_lib is a string
+	libfile_args has a value which is a reference to a list where each element is a kb_A5.libfile_args_type
+	pipeline_args has a value which is a kb_A5.pipeline_args_type
+libfile_args_type is a reference to a hash where the following keys are defined:
+	libfile_library has a value which is a kb_A5.single_or_paired_end_lib
+	libfile_unpaired has a value which is a kb_A5.single_end_lib
+	libfile_insert has a value which is an int
+single_or_paired_end_lib is a string
+single_end_lib is a string
+pipeline_args_type is a reference to a hash where the following keys are defined:
+	step_begin has a value which is an int
+	step_end has a value which is an int
 A5_Output is a reference to a hash where the following keys are defined:
 	report_name has a value which is a string
 	report_ref has a value which is a string
@@ -297,7 +315,7 @@ sub _validate_version {
 
 
 
-=head2 paired_end_lib
+=head2 single_or_paired_end_lib
 
 =over 4
 
@@ -329,6 +347,98 @@ a string
 
 
 
+=head2 single_end_lib
+
+=over 4
+
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a string
+</pre>
+
+=end html
+
+=begin text
+
+a string
+
+=end text
+
+=back
+
+
+
+=head2 libfile_args_type
+
+=over 4
+
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+libfile_library has a value which is a kb_A5.single_or_paired_end_lib
+libfile_unpaired has a value which is a kb_A5.single_end_lib
+libfile_insert has a value which is an int
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+libfile_library has a value which is a kb_A5.single_or_paired_end_lib
+libfile_unpaired has a value which is a kb_A5.single_end_lib
+libfile_insert has a value which is an int
+
+
+=end text
+
+=back
+
+
+
+=head2 pipeline_args_type
+
+=over 4
+
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+step_begin has a value which is an int
+step_end has a value which is an int
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+step_begin has a value which is an int
+step_end has a value which is an int
+
+
+=end text
+
+=back
+
+
+
 =head2 A5_Params
 
 =over 4
@@ -340,7 +450,7 @@ a string
 Input parameters for running A5.
 string workspace_name - the name of the workspace from which to take
    input and store output.
-list<paired_end_lib> read_libraries - Illumina PairedEndLibrary files
+list<libfile_args_type> list of entries in the libfile - SingleEndLibrary or PairedEndLibrary files
     to assemble.
 string output_contigset_name - the name of the output contigset
 
@@ -352,9 +462,10 @@ string output_contigset_name - the name of the output contigset
 <pre>
 a reference to a hash where the following keys are defined:
 workspace_name has a value which is a string
-read_libraries has a value which is a reference to a list where each element is a kb_A5.paired_end_lib
 output_contigset_name has a value which is a string
 min_contig_length has a value which is an int
+libfile_args has a value which is a reference to a list where each element is a kb_A5.libfile_args_type
+pipeline_args has a value which is a kb_A5.pipeline_args_type
 
 </pre>
 
@@ -364,9 +475,10 @@ min_contig_length has a value which is an int
 
 a reference to a hash where the following keys are defined:
 workspace_name has a value which is a string
-read_libraries has a value which is a reference to a list where each element is a kb_A5.paired_end_lib
 output_contigset_name has a value which is a string
 min_contig_length has a value which is an int
+libfile_args has a value which is a reference to a list where each element is a kb_A5.libfile_args_type
+pipeline_args has a value which is a kb_A5.pipeline_args_type
 
 
 =end text

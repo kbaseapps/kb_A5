@@ -11,17 +11,6 @@
     },
     "parameters": [
         {
-            "id": "read_libraries",
-            "optional": false,
-            "advanced": false,
-            "allow_multiple": false,
-            "default_values": [ "" ],
-            "field_type": "text",
-            "text_options": {
-                "valid_ws_types": ["KBaseFile.PairedEndLibrary", "KBaseAssembly.PairedEndLibrary", "KBaseFile.SingleEndLibrary", "KBaseAssembly.SingleEndLibrary"]
-            }
-        },
-        {
             "id": "output_contigset_name",
             "optional": false,
             "advanced": false,
@@ -44,9 +33,84 @@
                 "validate_as" : "int",
 		        "min_int" : 0
             }
+        },
+        {
+            "id": "step_begin",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [ "1" ],
+            "field_type": "text",
+            "text_options": {
+                "validate_as" : "int",
+		        "min_int" : 1,
+                "max_int" : 5
+            }
+        },
+        {
+            "id": "step_end",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [ "5" ],
+            "field_type": "text",
+            "text_options": {
+                "validate_as" : "int",
+		        "min_int" : 1,
+                "max_int" : 5
+            }
+        },
+        {
+            "id": "libfile_library",
+            "optional": false,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "" ],
+            "field_type": "text",
+            "text_options": {
+                "valid_ws_types": ["KBaseFile.PairedEndLibrary", "KBaseAssembly.PairedEndLibrary", "KBaseFile.SingleEndLibrary", "KBaseAssembly.SingleEndLibrary"]
+            }
+        },
+        {
+            "id": "libfile_unpaired",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [ "" ],
+            "field_type": "text",
+            "text_options": {
+                "valid_ws_types": ["KBaseFile.SingleEndLibrary", "KBaseAssembly.SingleEndLibrary"]
+            }
+        },
+        {
+            "id": "libfile_insert",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [ "100" ],
+            "field_type": "text",
+            "text_options": {
+                "validate_as" : "int",
+                "min_int" : 1
+            }
         }
     ],
-
+    "parameter-groups": [
+	    {
+	      "id": "pipeline_args",
+	      "parameters": ["step_begin","step_end"],
+	      "optional": true,
+	      "allow_multiple": false,
+	      "with_border": true
+	    },
+        {
+	      "id": "libfile_args",
+	      "parameters": ["libfile_library","libfile_unpaired","libfile_insert"],
+	      "optional": false,
+	      "allow_multiple": true,
+	      "with_border": true
+	    }
+    ],
     "behavior": {
         "service-mapping": {
             "url": "",
@@ -54,13 +118,16 @@
             "method": "run_A5",
             "input_mapping": [
                 {
-                    "narrative_system_variable": "workspace",
-                    "target_property": "workspace_name"
+                    "input_parameter": "libfile_args",
+                    "target_property": "libfile_args"
                 },
                 {
-                    "input_parameter": "read_libraries",
-                    "target_property": "read_libraries",
-                    "target_type_transform": "list<ref>"
+                    "input_parameter": "pipeline_args",
+                    "target_property": "pipeline_args"
+                },
+                {
+                    "narrative_system_variable": "workspace",
+                    "target_property": "workspace_name"
                 },
                 {
                     "input_parameter": "output_contigset_name",
@@ -87,10 +154,6 @@
                 {
                     "service_method_output_path": [0],
                     "target_property": "A5_result"
-                },
-                {
-                    "input_parameter": "read_libraries",
-                    "target_property": "input_read_libraries"
                 },
                 {
                     "input_parameter": "output_contigset_name",

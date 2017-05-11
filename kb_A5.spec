@@ -9,20 +9,33 @@ module kb_A5 {
     /* The workspace object name of a PairedEndLibrary file, whether of the
        KBaseAssembly or KBaseFile type.
     */
-    typedef string paired_end_lib;
+    typedef string single_or_paired_end_lib;
+    typedef string single_end_lib;
+
+    typedef structure {
+        single_or_paired_end_lib libfile_library;          /* single or paired */
+        single_end_lib           libfile_unpaired;         /*  unpaired reads */
+        int                      libfile_insert;           /*  insert value   */
+    } libfile_args_type;
+
+    typedef structure {
+        int                      step_begin;           /* pipeline step:  1 - 5  */
+        int                      step_end;             /* pipeline step:  1 - 5  */
+    } pipeline_args_type;
 
     /* Input parameters for running A5.
         string workspace_name - the name of the workspace from which to take
            input and store output.
-        list<paired_end_lib> read_libraries - Illumina PairedEndLibrary files
+        list<libfile_args_type> list of entries in the libfile - SingleEndLibrary or PairedEndLibrary files
             to assemble.
         string output_contigset_name - the name of the output contigset
     */
     typedef structure {
-        string               workspace_name;
-        list<paired_end_lib> read_libraries;                /*  input reads  */
-        string               output_contigset_name;         /*  name of output contigs */
-        int                  min_contig_length;             /*  (=200) minimum size of contig */
+        string                   workspace_name;
+        string                   output_contigset_name;         /*  name of output contigs */
+        int                      min_contig_length;             /*  (=200) minimum size of contig */
+        list<libfile_args_type>  libfile_args;                  /*  arguments to create the libfile */
+        pipeline_args_type       pipeline_args;                 /*  begin and end of pipeline steps */
     } A5_Params;
     
     /* Output parameters for A5 run.

@@ -28,11 +28,6 @@ suggestions:
 #
 
 parameters :
-    read_libraries :
-        ui-name : |
-            Read library
-        short-hint : |
-            The libraries of reads to be assembled.
     output_contigset_name :
         ui-name : |
             Output ContigSet
@@ -43,6 +38,43 @@ parameters :
             Minimum Contig Length
         short-hint : |
             The shortest contig to accept in the resulting assembly object, should be < largest contig size
+    step_begin :
+        ui-name : |
+            Begin
+        short-hint : |
+            Pipeline step to begin
+    step_end :
+        ui-name : |
+            Minimum Contig Length
+        short-hint : |
+            Pipeline step to end
+    libfile_library :
+        ui-name : |
+            libfile library
+        short-hint : |
+            single or paired
+    libfile_unpaired :
+        ui-name : |
+            libfile unpaired
+        short-hint : |
+            single
+    libfile_insert :
+        ui-name : |
+            Insert value
+        short-hint : |
+            Insert value
+
+parameter-groups :
+    libfile_args :
+        ui-name : Input libraries
+        short-hint : |
+            Input libraries
+
+    pipeline_args :
+        ui-name : Pipeline steps - begin and end
+        short-hint : |
+            Steps of assembly pipeline to begin and end
+
 
 #
 # Configure the display and description of parameters
