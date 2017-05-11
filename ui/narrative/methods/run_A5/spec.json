@@ -11,6 +11,40 @@
     },
     "parameters": [
         {
+            "id": "libfile_library",
+            "optional": false,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "" ],
+            "field_type": "text",
+            "text_options": {
+                "valid_ws_types": ["KBaseFile.PairedEndLibrary", "KBaseAssembly.PairedEndLibrary", "KBaseFile.SingleEndLibrary", "KBaseAssembly.SingleEndLibrary"]
+            }
+        },
+        {
+            "id": "libfile_unpaired",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [ "" ],
+            "field_type": "text",
+            "text_options": {
+                "valid_ws_types": ["KBaseFile.SingleEndLibrary", "KBaseAssembly.SingleEndLibrary"]
+            }
+        },
+        {
+            "id": "libfile_insert",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [ "100" ],
+            "field_type": "text",
+            "text_options": {
+                "validate_as" : "int",
+                "min_int" : 1
+            }
+        },
+        {
             "id": "output_contigset_name",
             "optional": false,
             "advanced": false,
@@ -59,55 +93,21 @@
 		        "min_int" : 1,
                 "max_int" : 5
             }
-        },
-        {
-            "id": "libfile_library",
-            "optional": false,
-            "advanced": false,
-            "allow_multiple": false,
-            "default_values": [ "" ],
-            "field_type": "text",
-            "text_options": {
-                "valid_ws_types": ["KBaseFile.PairedEndLibrary", "KBaseAssembly.PairedEndLibrary", "KBaseFile.SingleEndLibrary", "KBaseAssembly.SingleEndLibrary"]
-            }
-        },
-        {
-            "id": "libfile_unpaired",
-            "optional": true,
-            "advanced": true,
-            "allow_multiple": false,
-            "default_values": [ "" ],
-            "field_type": "text",
-            "text_options": {
-                "valid_ws_types": ["KBaseFile.SingleEndLibrary", "KBaseAssembly.SingleEndLibrary"]
-            }
-        },
-        {
-            "id": "libfile_insert",
-            "optional": true,
-            "advanced": true,
-            "allow_multiple": false,
-            "default_values": [ "100" ],
-            "field_type": "text",
-            "text_options": {
-                "validate_as" : "int",
-                "min_int" : 1
-            }
         }
     ],
     "parameter-groups": [
 	    {
+	      "id": "libfile_args",
+	      "parameters": ["libfile_library","libfile_unpaired","libfile_insert"],
+	      "optional": false,
+	      "allow_multiple": true,
+	      "with_border": true
+	    },
+        {
 	      "id": "pipeline_args",
 	      "parameters": ["step_begin","step_end"],
 	      "optional": true,
 	      "allow_multiple": false,
-	      "with_border": true
-	    },
-        {
-	      "id": "libfile_args",
-	      "parameters": ["libfile_library","libfile_unpaired","libfile_insert"],
-	      "optional": true,
-	      "allow_multiple": true,
 	      "with_border": true
 	    }
     ],
