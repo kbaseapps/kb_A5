@@ -107,6 +107,7 @@
 	      "id": "pipeline_args",
 	      "parameters": ["step_begin","step_end"],
 	      "optional": true,
+            "advanced": true,
 	      "allow_multiple": false,
 	      "with_border": true
 	    }
