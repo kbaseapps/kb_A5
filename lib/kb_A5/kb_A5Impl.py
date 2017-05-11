@@ -22,6 +22,7 @@ from kb_quast.kb_quastClient import kb_quast
 from kb_quast.baseclient import ServerError as QUASTError
 from kb_ea_utils.kb_ea_utilsClient import kb_ea_utils
 import time
+from datetime import datetime
 
 class ShockException(Exception):
     pass
@@ -48,7 +49,7 @@ https://github.com/levinas/a5
     ######################################### noqa
     VERSION = "0.0.1"
     GIT_URL = "https://github.com/ugswork/kb_A5.git"
-    GIT_COMMIT_HASH = "15cb3b52456f6569366a5ade831ce6027d2286d0"
+    GIT_COMMIT_HASH = "9fe7c2398ff0c0917675299fad188fc579a75f4e"
 
     #BEGIN_CLASS_HEADER
     # Class variables and functions can be defined in this block
@@ -56,9 +57,16 @@ https://github.com/levinas/a5
     DISABLE_A5_OUTPUT = False  # should be False in production
 
     PARAM_IN_WS = 'workspace_name'
-    PARAM_IN_LIB = 'read_libraries'
     PARAM_IN_CS_NAME = 'output_contigset_name'
     PARAM_IN_MIN_CONTIG = 'min_contig'
+    PARAM_IN_PIPELINE_ARGS = 'pipeline_args'
+    PARAM_IN_BEGIN = 'step_begin'
+    PARAM_IN_END = 'step_end'
+    PARAM_IN_LIBFILE_ARGS = 'libfile_args'
+    PARAM_IN_LIBRARY = 'libfile_library'
+    PARAM_IN_UNPAIRED = 'libfile_unpaired'
+    PARAM_IN_INSERT = 'libfile_insert'
+    INPUT_LIBFILE = 'generated_input_libfile'
 
     INVALID_WS_OBJ_NAME_RE = re.compile('[^\\w\\|._-]')
     INVALID_WS_NAME_RE = re.compile('[^\\w:._-]')
@@ -77,39 +85,96 @@ https://github.com/levinas/a5
               str(time.time()) + ': ' + str(message))
 
 
-    def exec_A5(self, reads_data, params_in, outdir):
+    def get_input_reads(self, params, token):
+        print('in get input reads')
 
-        #threads = psutil.cpu_count() * self.THREADS_PER_CORE
+        wsname = params[self.PARAM_IN_WS]
+        libfile_args = params[self.PARAM_IN_LIBFILE_ARGS]
+
+        refs = []
+        for libarg in params[self.PARAM_IN_LIBFILE_ARGS]:
+            read_name = libarg[self.PARAM_IN_LIBRARY]
+            if '/' in read_name:
+                ref = read_name
+            else:
+                ref = wsname + '/' + read_name
+            refs.append(ref)
+            libarg['ref_library'] = ref
+
+            if self.PARAM_IN_UNPAIRED in libarg:
+                read_name = libarg[self.PARAM_IN_UNPAIRED]
+                if '/' in read_name:
+                    ref = read_name
+                else:
+                    ref = wsname + '/' + read_name
+                refs.append(ref)
+                libarg['ref_unpaired'] = ref
+
+        readcli = ReadsUtils(self.callbackURL, token=token,
+                             service_ver='dev')
+
+        typeerr = ('Supported types: KBaseFile.SingleEndLibrary ' +
+                   'KBaseFile.PairedEndLibrary ' +
+                   'KBaseAssembly.SingleEndLibrary ' +
+                   'KBaseAssembly.PairedEndLibrary')
+        try:
+            reads = readcli.download_reads({'read_libraries': refs,
+                                            'interleaved': 'true',
+                                            'gzipped': None
+                                            })['files']
+        except ServerError as se:
+            self.log('logging stacktrace from dynamic client error')
+            self.log(se.data)
+            if typeerr in se.message:
+                prefix = se.message.split('.')[0]
+                raise ValueError(
+                    prefix + '. Only the types ' +
+                    'KBaseAssembly.PairedEndLibrary ' +
+                    'and KBaseFile.PairedEndLibrary are supported')
+            else:
+                raise
+
+        self.log('Got reads data from converter:\n' + pformat(reads))
+        print("READSSSSSSSSS:")
+        pprint(reads)
+        return reads
+
+
+    def generate_libfile(self, libfile_args, reads, outdir):
+        print ("in GGGGGGENERATE libfile")
+        pprint(libfile_args)
 
         if not os.path.exists(outdir):
             os.makedirs(outdir)
 
-        # The fq2fa can only be run on a single library
-        # The library must be paired end.
+        libfile_name = os.path.join(outdir, self.INPUT_LIBFILE)
+        with open(libfile_name, 'w') as libf:
+            for libarg in libfile_args:
+                libf.write('[LIB]\n')
+                library = reads[libarg['ref_library']]['files']['fwd']
+                libf.write('shuf='+library+'\n')
+                if self.PARAM_IN_UNPAIRED in libarg and libarg[self.PARAM_IN_UNPAIRED] is not None:
+                    unpaired = reads[libarg['ref_unpaired']]['files']['fwd']
+                    libf.write('up='+unpaired+'\n')
+                if self.PARAM_IN_INSERT in libarg and libarg[self.PARAM_IN_INSERT] is not None:
+                    libf.write('ins='+str(libarg[self.PARAM_IN_INSERT])+'\n')
+            libf.close()
+        return libfile_name
 
-        if len(reads_data) > 1 or reads_data[0]['type'] != 'paired':
-            error_msg = 'A5 assembly requires that one and ' + \
-                            'only one paired end library as input.'
-            if len(reads_data) > 1:
-                error_msg += ' ' + str(len(reads_data)) + \
-                                 ' libraries detected.'
-            raise ValueError(error_msg)
 
-        print("LENGTH OF READSDATA IN EXEC: " + str(len(reads_data)))
-        print("READS DATA: ")
-        pprint(reads_data)
-        pprint("=============  END OF READS DATA  ===============")
+    def exec_A5(self, libfile, params, outdir):
 
-        # first convert input reads_data from fastq to paf
-        # output of minimap saved in minimap_outfile
+        output_files_prefix = params[self.PARAM_IN_CS_NAME]
+        a5_cmd = ['a5_pipeline.pl']
 
-        a5_output = params_in[self.PARAM_IN_CS_NAME]
+        if self.PARAM_IN_PIPELINE_ARGS in params and params[self.PARAM_IN_PIPELINE_ARGS] is not None:
+            beginVal = params[self.PARAM_IN_PIPELINE_ARGS][self.PARAM_IN_BEGIN]
+            endVal = params[self.PARAM_IN_PIPELINE_ARGS][self.PARAM_IN_END]
+            a5_cmd.append('--begin=' + str(beginVal))
+            a5_cmd.append('--end=' + str(endVal))
 
-        # use minimap_outfile as input to A5 assembler
-        # output file from the assembler saved in a5_gfa_outfile
-
-        a5_cmd = ['a5_pipeline.pl', reads_data[0]['fwd_file'], reads_data[0]['rev_file'],
-                       a5_output]
+        a5_cmd.append(libfile),
+        a5_cmd.append(output_files_prefix)
 
         print("\nA5 CMD:     " + str(a5_cmd))
         self.log(a5_cmd)
@@ -126,8 +191,6 @@ https://github.com/levinas/a5
         if p.returncode != 0:
             raise ValueError('Error running A5, return code: ' +
                              str(retcode) + '\n')
-
-        return a5_output
 
 
     # adapted from
@@ -225,16 +288,16 @@ https://github.com/levinas/a5
         if self.INVALID_WS_NAME_RE.search(params[self.PARAM_IN_WS]):
             raise ValueError('Invalid workspace name ' +
                              params[self.PARAM_IN_WS])
-        if self.PARAM_IN_LIB not in params:
-            raise ValueError(self.PARAM_IN_LIB + ' parameter is required')
-        if type(params[self.PARAM_IN_LIB]) != list:
-            raise ValueError(self.PARAM_IN_LIB + ' must be a list')
-        if not params[self.PARAM_IN_LIB]:
+        if self.PARAM_IN_LIBFILE_ARGS not in params:
+            raise ValueError(self.PARAM_IN_LIBFILE_ARGS + ' parameter is required')
+        if type(params[self.PARAM_IN_LIBFILE_ARGS]) != list:
+            raise ValueError(self.PARAM_IN_LIBFILE_ARGS + ' must be a list')
+        if not params[self.PARAM_IN_LIBFILE_ARGS]:
             raise ValueError('At least one reads library must be provided')
-        # for l in params[self.PARAM_IN_LIB]:
-        #    print("PARAM_IN_LIB : " + str(l))
-        #    if self.INVALID_WS_OBJ_NAME_RE.search(l):
-        #        raise ValueError('Invalid workspace object name ' + l)
+        for libarg in params[self.PARAM_IN_LIBFILE_ARGS]:
+            if not isinstance(libarg[self.PARAM_IN_INSERT], int):
+                raise ValueError('insert value must be of type int')
+
         if (self.PARAM_IN_CS_NAME not in params or
                 not params[self.PARAM_IN_CS_NAME]):
             raise ValueError(self.PARAM_IN_CS_NAME + ' parameter is required')
@@ -245,6 +308,12 @@ https://github.com/levinas/a5
         if self.PARAM_IN_MIN_CONTIG in params:
             if not isinstance(params[self.PARAM_IN_MIN_CONTIG], int):
                 raise ValueError('min_contig must be of type int')
+
+        if self.PARAM_IN_PIPELINE_ARGS in params and params[self.PARAM_IN_PIPELINE_ARGS] is not None:
+            if not isinstance(params[self.PARAM_IN_PIPELINE_ARGS][self.PARAM_IN_BEGIN], int):
+                raise ValueError('Step begin value must be of type int')
+            if not isinstance(params[self.PARAM_IN_PIPELINE_ARGS][self.PARAM_IN_END], int):
+                raise ValueError('Step end value must be of type int')
 
 
     #END_CLASS_HEADER
@@ -270,15 +339,19 @@ https://github.com/levinas/a5
         Run A5 on paired end libraries
         :param params: instance of type "A5_Params" (Input parameters for
            running A5. string workspace_name - the name of the workspace from
-           which to take input and store output. list<paired_end_lib>
-           read_libraries - Illumina PairedEndLibrary files to assemble.
-           string output_contigset_name - the name of the output contigset)
-           -> structure: parameter "workspace_name" of String, parameter
-           "read_libraries" of list of type "paired_end_lib" (The workspace
-           object name of a PairedEndLibrary file, whether of the
-           KBaseAssembly or KBaseFile type.), parameter
-           "output_contigset_name" of String, parameter "min_contig_length"
-           of Long
+           which to take input and store output. list<libfile_args_type> list
+           of entries in the libfile - SingleEndLibrary or PairedEndLibrary
+           files to assemble. string output_contigset_name - the name of the
+           output contigset) -> structure: parameter "workspace_name" of
+           String, parameter "output_contigset_name" of String, parameter
+           "min_contig_length" of Long, parameter "libfile_args" of list of
+           type "libfile_args_type" -> structure: parameter "libfile_library"
+           of type "single_or_paired_end_lib" (The workspace object name of a
+           PairedEndLibrary file, whether of the KBaseAssembly or KBaseFile
+           type.), parameter "libfile_unpaired" of type "single_end_lib",
+           parameter "libfile_insert" of Long, parameter "pipeline_args" of
+           type "pipeline_args_type" -> structure: parameter "step_begin" of
+           Long, parameter "step_end" of Long
         :returns: instance of type "A5_Output" (Output parameters for A5 run.
            string report_name - the name of the KBaseReport.Report workspace
            object. string report_ref - the workspace reference of the
@@ -295,80 +368,25 @@ https://github.com/levinas/a5
         # https://github.com/msneddon/MEGAHIT
         self.log('Running run_A5 with params:\n' + pformat(params))
 
-        token = ctx['token']
-
         # the reads should really be specified as a list of absolute ws refs
         # but the narrative doesn't do that yet
         self.process_params(params)
 
+        token = ctx['token']
+
         # get absolute refs from ws
         wsname = params[self.PARAM_IN_WS]
         print("Workspace name: " + wsname)
-        obj_ids = []
-        for r in params[self.PARAM_IN_LIB]:
-            obj_ids.append({'ref': r if '/' in r else (wsname + '/' + r)})
-        ws = workspaceService(self.workspaceURL, token=token)
-        ws_info = ws.get_object_info_new({'objects': obj_ids})
-        reads_params = []
 
-        reftoname = {}
-        for wsi, oid in zip(ws_info, obj_ids):
-            ref = oid['ref']
-            reads_params.append(ref)
-            obj_name = wsi[1]
-            reftoname[ref] = wsi[7] + '/' + obj_name
+        # set the output location
+        timestamp = int((datetime.utcnow() - datetime.utcfromtimestamp(0)).total_seconds() * 1000)
+        outdir = os.path.join(self.scratch, 'A5_dir' + str(timestamp))
 
-        readcli = ReadsUtils(self.callbackURL, token=ctx['token'])
+        reads = self.get_input_reads(params, token)
+        libFile = self.generate_libfile(params[self.PARAM_IN_LIBFILE_ARGS], reads, outdir)
+        a5_output_prefix = params[self.PARAM_IN_CS_NAME]
 
-        typeerr = ('Supported types: KBaseFile.SingleEndLibrary ' +
-                   'KBaseFile.PairedEndLibrary ' +
-                   'KBaseAssembly.SingleEndLibrary ' +
-                   'KBaseAssembly.PairedEndLibrary')
-        try:
-            reads = readcli.download_reads({'read_libraries': reads_params,
-                                            'interleaved': 'false',
-                                            'gzipped': None
-                                            })['files']
-        except ServerError as se:
-            self.log('logging stacktrace from dynamic client error')
-            self.log(se.data)
-            if typeerr in se.message:
-                prefix = se.message.split('.')[0]
-                raise ValueError(
-                    prefix + '. Only the types ' +
-                    'KBaseAssembly.PairedEndLibrary ' +
-                    'and KBaseFile.PairedEndLibrary are supported')
-            else:
-                raise
-
-        self.log('Got reads data from converter:\n' + pformat(reads))
-
-        reads_data = []
-        for ref in reads:
-            reads_name = reftoname[ref]
-            f = reads[ref]['files']
-            print ("REF:" + str(ref))
-            print ("READS REF:" + str(reads[ref]))
-            seq_tech = reads[ref]["sequencing_tech"]
-            if f['type'] == 'interleaved':
-                reads_data.append({'fwd_file': f['fwd'], 'type':'paired',
-                                   'seq_tech': seq_tech})
-            elif f['type'] == 'paired':
-                reads_data.append({'fwd_file': f['fwd'], 'rev_file': f['rev'],
-                                   'type':'paired', 'seq_tech': seq_tech})
-            elif f['type'] == 'single':
-                reads_data.append({'fwd_file': f['fwd'], 'type':'single',
-                                   'seq_tech': seq_tech})
-            else:
-                raise ValueError('Something is very wrong with read lib' + reads_name)
-
-        print("READS_DATA: ")
-        pprint(reads_data)
-        print("============================   END OF READS_DATA: ")
-
-        outdir = os.path.join(self.scratch, 'A5_dir')
-
-        a5_output_prefix = self.exec_A5(reads_data, params, outdir)
+        self.exec_A5(libFile, params, outdir)
         self.log('A5 output dir: ' + a5_output_prefix)
 
         # parse the output and save back to KBase

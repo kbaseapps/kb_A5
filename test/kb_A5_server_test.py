@@ -190,97 +190,6 @@ class kb_A5Test(unittest.TestCase):
 
 
     @classmethod
-    def upload_assembly(cls, wsobjname, object_body, fwd_reads,
-                        rev_reads=None, kbase_assy=False,
-                        single_end=False, sequencing_tech='Illumina'):
-        if single_end and rev_reads:
-            raise ValueError('u r supr dum')
-
-        print('\n===============staging data for object ' + wsobjname +
-              '================')
-        print('uploading forward reads file ' + fwd_reads['file'])
-        fwd_id, fwd_handle_id, fwd_md5, fwd_size = \
-            cls.upload_file_to_shock_and_get_handle(fwd_reads['file'])
-        fwd_handle = {
-                      'hid': fwd_handle_id,
-                      'file_name': fwd_reads['name'],
-                      'id': fwd_id,
-                      'url': cls.shockURL,
-                      'type': 'shock',
-                      'remote_md5': fwd_md5
-                      }
-
-        ob = dict(object_body)  # copy
-        ob['sequencing_tech'] = sequencing_tech
-        if kbase_assy:
-            if single_end:
-                wstype = 'KBaseAssembly.SingleEndLibrary'
-                ob['handle'] = fwd_handle
-            else:
-                wstype = 'KBaseAssembly.PairedEndLibrary'
-                ob['handle_1'] = fwd_handle
-        else:
-            if single_end:
-                wstype = 'KBaseFile.SingleEndLibrary'
-                obkey = 'lib'
-            else:
-                wstype = 'KBaseFile.PairedEndLibrary'
-                obkey = 'lib1'
-            ob[obkey] = \
-                {'file': fwd_handle,
-                 'encoding': 'UTF8',
-                 'type': fwd_reads['type'],
-                 'size': fwd_size
-                 }
-
-        rev_id = None
-        rev_handle_id = None
-        if rev_reads:
-            print('uploading reverse reads file ' + rev_reads['file'])
-            rev_id, rev_handle_id, rev_md5, rev_size = \
-                cls.upload_file_to_shock_and_get_handle(rev_reads['file'])
-            rev_handle = {
-                          'hid': rev_handle_id,
-                          'file_name': rev_reads['name'],
-                          'id': rev_id,
-                          'url': cls.shockURL,
-                          'type': 'shock',
-                          'remote_md5': rev_md5
-                          }
-            if kbase_assy:
-                ob['handle_2'] = rev_handle
-            else:
-                ob['lib2'] = \
-                    {'file': rev_handle,
-                     'encoding': 'UTF8',
-                     'type': rev_reads['type'],
-                     'size': rev_size
-                     }
-
-        print('Saving object data')
-        objdata = cls.wsClient.save_objects({
-            'workspace': cls.getWsName(),
-            'objects': [
-                        {
-                         'type': wstype,
-                         'data': ob,
-                         'name': wsobjname
-                         }]
-            })[0]
-        print('Saved object objdata: ')
-        pprint(objdata)
-        print('Saved object ob: ')
-        pprint(ob)
-        cls.staged[wsobjname] = {'info': objdata,
-                                 'ref': cls.make_ref(objdata),
-                                 'fwd_node_id': fwd_id,
-                                 'rev_node_id': rev_id,
-                                 'fwd_handle_id': fwd_handle_id,
-                                 'rev_handle_id': rev_handle_id
-                                 }
-
-
-    @classmethod
     def upload_empty_data(cls, wsobjname):
         objdata = cls.wsClient.save_objects({
             'workspace': cls.getWsName(),
@@ -293,6 +202,7 @@ class kb_A5Test(unittest.TestCase):
                                  'ref': cls.make_ref(objdata),
                                  }
 
+
     @classmethod
     def setupTestData(cls):
         print('Shock url ' + cls.shockURL)
@@ -304,17 +214,45 @@ class kb_A5Test(unittest.TestCase):
         # get file type from type
 
         phiX_fwd_reads = {'file': 'data/phiX_p1.fastq',
-                     'name': 'test_fwd.fastq',
+                     'name': 'phiX_fwd.fastq',
                      'type': 'fastq'}
         # get file type from handle file name
         phiX_rev_reads = {'file': 'data/phiX_p2.fastq',
-                     'name': 'test_rev.fastq',
+                     'name': 'phiX_rev.fastq',
                      'type': ''}
 
+        small_fwd_reads = {'file': 'data/small.forward.fq',
+                     'name': 'small_fwd.fastq',
+                     'type': 'fastq'}
+        # get file type from handle file name
+        small_rev_reads = {'file': 'data/small.reverse.fq',
+                     'name': 'small_rev.FQ',
+                     'type': ''}
+        '''
+        phiX_fwd_reads = {'file': 'data/phix-small-1.fwd.fq',
+                          'name': 'phix-small-1.fwd.fq',
+                          'type': 'fastq'}
+        # get file type from handle file name
+        phiX_rev_reads = {'file': 'data/phix-small-1.rev.fq',
+                          'name': 'phix-small-1.rev.fq',
+                          'type': ''}
+
+        small_fwd_reads = {'file': 'data/small-1.fwd.fq',
+                           'name': 'small_fwd.fastq',
+                           'type': 'fastq'}
+        # get file type from handle file name
+        small_rev_reads = {'file': 'data/small-1.rev.fq',
+                           'name': 'small-1.rev.fq',
+                           'type': ''}
+        '''
+
         cls.upload_reads('phiX_reads', {}, phiX_fwd_reads, rev_reads=phiX_rev_reads)
+        #cls.upload_reads('small_reads', {}, small_fwd_reads, rev_reads=small_rev_reads)
+        #???
+        #cls.upload_reads('small_single_reads', {}, small_fwd_reads)  ## ???
 
         cls.delete_shock_node(cls.nodes_to_delete.pop())
-        #cls.upload_empty_data('empty')
+        cls.upload_empty_data('empty')
         print('Data staged.')
 
 
@@ -326,7 +264,11 @@ class kb_A5Test(unittest.TestCase):
     def test_run_A5(self):
 
         self.run_success(
-            ['phiX_reads'], 'phiX_A5_output',
+
+            [ {'libfile_library':'phiX_reads',
+               'libfile_insert': 300 }
+            ],
+            'phiX_A5_output',
             {'contigs':
              [{'name': 'node0_4_2_358413',
                'length': 5469,
@@ -338,6 +280,29 @@ class kb_A5Test(unittest.TestCase):
              },
             200 )
 
+        '''
+        [ {'libfile_library':'phiX_reads',
+               'libfile_unpaired': 'small_single_reads',
+               'libfile_insert': 300 },
+              {'libfile_library': 'small_reads',
+               'libfile_insert': 500}
+            ],
+        self.run_success(
+            ['phiX_reads', 'small_reads'],
+            'phiX_A5_output',
+            {'contigs':
+                 [{'name': 'node0_4_2_358413',
+                   'length': 5469,
+                   'id': 'node0_4_2_358413',
+                   'md5': '4e1621ec0c74d80ec4fbb205feee68e2'
+                   }],
+             'md5': 'f0fbe971bd000f78d7c602a2a6926a3a',
+             'remote_md5': '801512cb01b3f8c5d1740a8bca083056'
+             },
+            200)
+        '''
+
+    '''
     def test_no_workspace_param(self):
 
         self.run_error(
@@ -426,27 +391,29 @@ class kb_A5Test(unittest.TestCase):
             self.getImpl().run_A5(self.ctx, params)
         self.assertEqual(error, str(context.exception.message))
 
+    '''
 
-    def run_success(self, readnames, output_name, expected,
+    def run_success(self, libfile_args, output_name, expected,
                         min_contig=None, opt_args=None, contig_count=None):
 
         test_name = inspect.stack()[1][3]
         print('\n**** starting expected success test: ' + test_name + ' *****')
-        print('   libs: ' + str(readnames))
+        print('   libs: ' + str(libfile_args))
 
         if not contig_count:
             contig_count = len(expected['contigs'])
 
-        print("READNAMES: " + str(readnames))
+        print("READNAMES: " + str(libfile_args))
         print("STAGED: " + str(self.staged))
+        pprint(self.staged)
 
-        libs = [self.staged[n]['info'][1] for n in readnames]
+        #libs = [self.staged[n]['info'][1] for n in libfile_args]
+        libs = libfile_args
 
         params = {'workspace_name': self.getWsName(),
-                  'read_libraries': libs,
+                  'libfile_args': libs,
                   'output_contigset_name': output_name,
-                  'min_contig' : min_contig,
-                  'opt_args': opt_args
+                  'min_contig' : min_contig
                   }
 
         print("PARAMS BEFORE CALLING ================== A5")
@@ -490,7 +457,7 @@ class kb_A5Test(unittest.TestCase):
         self.nodes_to_delete.append(assembly_fasta_node)
         header = {"Authorization": "Oauth {0}".format(self.token)}
 
-        '''
+
         # the remote md5 happens to be different across runs
         fasta_node = requests.get(self.shockURL + '/node/' + assembly_fasta_node,
                                   headers=header, allow_redirects=True).json()
@@ -514,7 +481,7 @@ class kb_A5Test(unittest.TestCase):
                 # Need to see them to update the tests accordingly.
                 # If code gets here this test is designed to always fail, but show results.
                 self.assertEqual(str(assembly['data']['contigs']), "BLAH")
-        '''
+
 
 
 
