@@ -50,9 +50,9 @@ parameters :
             Pipeline step to end
     libfile_library :
         ui-name : |
-            Reads Library
+            Reads Library:
         short-hint : |
-            Single or paired end library
+            Paired end library
     libfile_unpaired :
         ui-name : |
             Optional unpaired
@@ -60,9 +60,9 @@ parameters :
             single
     libfile_insert :
         ui-name : |
-            Insert value
+            Optional Insert value: 0 for autoselect
         short-hint : |
-            Insert value
+            Optional Insert value: 0 for autoselect
 
 parameter-groups :
     libfile_args :
