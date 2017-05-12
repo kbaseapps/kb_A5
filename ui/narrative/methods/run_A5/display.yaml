@@ -37,7 +37,7 @@ parameters :
         ui-name : |
             Minimum Contig Length
         short-hint : |
-            The shortest contig to accept in the resulting assembly object, should be < largest contig size
+            The shortest contig to accept in the resulting assembly object
     step_begin :
         ui-name : |
             Begin
@@ -50,19 +50,19 @@ parameters :
             Pipeline step to end
     libfile_library :
         ui-name : |
-            Reads Library:
+            Reads Library
         short-hint : |
             Paired end library
     libfile_unpaired :
         ui-name : |
-            Optional unpaired
+            Optional unpaired: None for no value
         short-hint : |
-            single
+            Optional unpaired reads of the input library. Enter name of unpaired reads or None for no input
     libfile_insert :
         ui-name : |
             Optional Insert value: 0 for autoselect
         short-hint : |
-            Optional Insert value: 0 for autoselect
+            Optional Insert value:  Enter 0 for autoselect
 
 parameter-groups :
     libfile_args :

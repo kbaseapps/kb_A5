@@ -266,6 +266,7 @@ class kb_A5Test(unittest.TestCase):
         self.run_success(
 
             [ {'libfile_library':'phiX_reads',
+               'libfile_unpaired': '  None  ',
                'libfile_insert': 300 }
             ],
             'phiX_A5_output',

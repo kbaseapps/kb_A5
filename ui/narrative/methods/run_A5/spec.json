@@ -22,6 +22,17 @@
             }
         },
         {
+            "id": "libfile_unpaired",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [ "None" ],
+            "field_type": "text",
+            "text_options": {
+                "validate_as" : "string"
+            }
+        },
+        {
             "id": "libfile_insert",
             "optional": true,
             "advanced": true,
@@ -87,7 +98,7 @@
     "parameter-groups": [
 	    {
 	      "id": "libfile_args",
-	      "parameters": ["libfile_library", "libfile_insert"],
+	      "parameters": ["libfile_library", "libfile_unpaired", "libfile_insert"],
 	      "optional": false,
 	      "allow_multiple": true,
 	      "with_border": true

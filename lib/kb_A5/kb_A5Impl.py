@@ -296,6 +296,10 @@ https://github.com/levinas/a5
         if not params[self.PARAM_IN_LIBFILE_ARGS]:
             raise ValueError('At least one reads library must be provided')
         for libarg in params[self.PARAM_IN_LIBFILE_ARGS]:
+            if self.PARAM_IN_UNPAIRED in libarg and libarg[self.PARAM_IN_UNPAIRED] is not None:
+                val = libarg[self.PARAM_IN_UNPAIRED].strip().lower()
+                if val == 'none':
+                    libarg[self.PARAM_IN_UNPAIRED] = None
             if not isinstance(libarg[self.PARAM_IN_INSERT], int):
                 raise ValueError('insert value must be of type int')
 
@@ -372,6 +376,7 @@ https://github.com/levinas/a5
         # the reads should really be specified as a list of absolute ws refs
         # but the narrative doesn't do that yet
         self.process_params(params)
+        pprint(params)
 
         token = ctx['token']
 
