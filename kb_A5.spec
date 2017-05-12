@@ -9,13 +9,13 @@ module kb_A5 {
     /* The workspace object name of a PairedEndLibrary file, whether of the
        KBaseAssembly or KBaseFile type.
     */
-    typedef string single_or_paired_end_lib;
+    typedef string paired_end_lib;
     typedef string single_end_lib;
 
     typedef structure {
-        single_or_paired_end_lib libfile_library;          /* single or paired */
-        single_end_lib           libfile_unpaired;         /*  unpaired reads */
-        int                      libfile_insert;           /*  insert value   */
+        paired_end_lib   libfile_library;          /* paired end */
+        single_end_lib   libfile_unpaired;         /*  unpaired reads */
+        int              libfile_insert;           /*  insert value   */
     } libfile_args_type;
 
     typedef structure {

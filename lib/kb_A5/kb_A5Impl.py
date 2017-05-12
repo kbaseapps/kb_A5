@@ -58,7 +58,7 @@ https://github.com/levinas/a5
 
     PARAM_IN_WS = 'workspace_name'
     PARAM_IN_CS_NAME = 'output_contigset_name'
-    PARAM_IN_MIN_CONTIG = 'min_contig'
+    PARAM_IN_MIN_CONTIG = 'min_contig_length'
     PARAM_IN_PIPELINE_ARGS = 'pipeline_args'
     PARAM_IN_BEGIN = 'step_begin'
     PARAM_IN_END = 'step_end'
@@ -101,7 +101,7 @@ https://github.com/levinas/a5
             refs.append(ref)
             libarg['ref_library'] = ref
 
-            if self.PARAM_IN_UNPAIRED in libarg:
+            if self.PARAM_IN_UNPAIRED in libarg and libarg[self.PARAM_IN_UNPAIRED] is not None:
                 read_name = libarg[self.PARAM_IN_UNPAIRED]
                 if '/' in read_name:
                     ref = read_name
@@ -135,13 +135,13 @@ https://github.com/levinas/a5
                 raise
 
         self.log('Got reads data from converter:\n' + pformat(reads))
-        print("READSSSSSSSSS:")
+        print("READS:")
         pprint(reads)
         return reads
 
 
     def generate_libfile(self, libfile_args, reads, outdir):
-        print ("in GGGGGGENERATE libfile")
+        print ("in GENERATE libfile")
         pprint(libfile_args)
 
         if not os.path.exists(outdir):
@@ -157,7 +157,8 @@ https://github.com/levinas/a5
                     unpaired = reads[libarg['ref_unpaired']]['files']['fwd']
                     libf.write('up='+unpaired+'\n')
                 if self.PARAM_IN_INSERT in libarg and libarg[self.PARAM_IN_INSERT] is not None:
-                    libf.write('ins='+str(libarg[self.PARAM_IN_INSERT])+'\n')
+                    if (int(libarg[self.PARAM_IN_INSERT])) > 0:
+                        libf.write('ins='+str(libarg[self.PARAM_IN_INSERT])+'\n')
             libf.close()
         return libfile_name
 
@@ -391,8 +392,7 @@ https://github.com/levinas/a5
 
         # parse the output and save back to KBase
 
-        output_contigs = os.path.join(outdir, a5_output_prefix + ".contigs.fasta")
-        #output_contigs = os.path.join(outdir, a5_output_prefix + ".final.scaffolds.fasta")
+        output_contigs = os.path.join(outdir, a5_output_prefix + ".final.scaffolds.fasta")
 
         min_contig_len = 0
 
