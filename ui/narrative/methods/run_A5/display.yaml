@@ -55,18 +55,18 @@ parameters :
             Paired end library
     libfile_unpaired :
         ui-name : |
-            Optional unpaired: None for no value
+            Optional Unpaired Reads
         short-hint : |
-            Optional unpaired reads of the input library. Enter name of unpaired reads or None for no input
+            Optional unpaired reads of the input library. Enter name of a single end library or None for no input
     libfile_insert :
         ui-name : |
-            Optional Insert value: 0 for autoselect
+            Optional Insert Value
         short-hint : |
             Optional Insert value:  Enter 0 for autoselect
 
 parameter-groups :
     libfile_args :
-        ui-name : Input libraries
+        ui-name : Input Libraries
         short-hint : |
             Input libraries
 
