@@ -91,24 +91,29 @@ https://github.com/levinas/a5
         wsname = params[self.PARAM_IN_WS]
         libfile_args = params[self.PARAM_IN_LIBFILE_ARGS]
 
-        refs = []
-        for libarg in params[self.PARAM_IN_LIBFILE_ARGS]:
+        obj_ids = []
+        for libarg in libfile_args:
             read_name = libarg[self.PARAM_IN_LIBRARY]
-            if '/' in read_name:
-                ref = read_name
-            else:
-                ref = wsname + '/' + read_name
-            refs.append(ref)
-            libarg['ref_library'] = ref
+            r = read_name if '/' in read_name else (wsname + '/' + read_name)
+            obj_ids.append({'ref': r})
+            libarg['ref_library'] = r
 
             if self.PARAM_IN_UNPAIRED in libarg and libarg[self.PARAM_IN_UNPAIRED] is not None:
                 read_name = libarg[self.PARAM_IN_UNPAIRED]
-                if '/' in read_name:
-                    ref = read_name
-                else:
-                    ref = wsname + '/' + read_name
-                refs.append(ref)
-                libarg['ref_unpaired'] = ref
+                r = read_name if '/' in read_name else (wsname + '/' + read_name)
+                obj_ids.append({'ref': r})
+                libarg['ref_unpaired'] = r
+
+        ws = workspaceService(self.workspaceURL, token=token)
+        ws_info = ws.get_object_info_new({'objects': obj_ids})
+        reads_params = []
+
+        reftoname = {}
+        for wsi, oid in zip(ws_info, obj_ids):
+            ref = oid['ref']
+            reads_params.append(ref)
+            obj_name = wsi[1]
+            reftoname[ref] = wsi[7] + '/' + obj_name
 
         readcli = ReadsUtils(self.callbackURL, token=token,
                              service_ver='dev')
@@ -117,8 +122,9 @@ https://github.com/levinas/a5
                    'KBaseFile.PairedEndLibrary ' +
                    'KBaseAssembly.SingleEndLibrary ' +
                    'KBaseAssembly.PairedEndLibrary')
+
         try:
-            reads = readcli.download_reads({'read_libraries': refs,
+            reads = readcli.download_reads({'read_libraries': reads_params,
                                             'interleaved': 'true',
                                             'gzipped': None
                                             })['files']
@@ -300,8 +306,9 @@ https://github.com/levinas/a5
                 val = libarg[self.PARAM_IN_UNPAIRED].strip().lower()
                 if val == 'none':
                     libarg[self.PARAM_IN_UNPAIRED] = None
-            if not isinstance(libarg[self.PARAM_IN_INSERT], int):
-                raise ValueError('insert value must be of type int')
+            if self.PARAM_IN_INSERT in libarg and libarg[self.PARAM_IN_INSERT] is not None:
+                if not isinstance(libarg[self.PARAM_IN_INSERT], int):
+                    raise ValueError('insert value must be of type int')
 
         if (self.PARAM_IN_CS_NAME not in params or
                 not params[self.PARAM_IN_CS_NAME]):
@@ -310,7 +317,7 @@ https://github.com/levinas/a5
             raise ValueError('Invalid workspace object name ' +
                              params[self.PARAM_IN_CS_NAME])
 
-        if self.PARAM_IN_MIN_CONTIG in params:
+        if self.PARAM_IN_MIN_CONTIG in params and params[self.PARAM_IN_MIN_CONTIG] is not None:
             if not isinstance(params[self.PARAM_IN_MIN_CONTIG], int):
                 raise ValueError('min_contig must be of type int')
 

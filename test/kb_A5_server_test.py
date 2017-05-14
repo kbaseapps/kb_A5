@@ -221,36 +221,7 @@ class kb_A5Test(unittest.TestCase):
                      'name': 'phiX_rev.fastq',
                      'type': ''}
 
-        small_fwd_reads = {'file': 'data/small.forward.fq',
-                     'name': 'small_fwd.fastq',
-                     'type': 'fastq'}
-        # get file type from handle file name
-        small_rev_reads = {'file': 'data/small.reverse.fq',
-                     'name': 'small_rev.FQ',
-                     'type': ''}
-        '''
-        phiX_fwd_reads = {'file': 'data/phix-small-1.fwd.fq',
-                          'name': 'phix-small-1.fwd.fq',
-                          'type': 'fastq'}
-        # get file type from handle file name
-        phiX_rev_reads = {'file': 'data/phix-small-1.rev.fq',
-                          'name': 'phix-small-1.rev.fq',
-                          'type': ''}
-
-        small_fwd_reads = {'file': 'data/small-1.fwd.fq',
-                           'name': 'small_fwd.fastq',
-                           'type': 'fastq'}
-        # get file type from handle file name
-        small_rev_reads = {'file': 'data/small-1.rev.fq',
-                           'name': 'small-1.rev.fq',
-                           'type': ''}
-        '''
-
         cls.upload_reads('phiX_reads', {}, phiX_fwd_reads, rev_reads=phiX_rev_reads)
-        #cls.upload_reads('small_reads', {}, small_fwd_reads, rev_reads=small_rev_reads)
-        #???
-        #cls.upload_reads('small_single_reads', {}, small_fwd_reads)  ## ???
-
         cls.delete_shock_node(cls.nodes_to_delete.pop())
         cls.upload_empty_data('empty')
         print('Data staged.')
@@ -260,6 +231,7 @@ class kb_A5Test(unittest.TestCase):
     def make_ref(self, object_info):
         return str(object_info[6]) + '/' + str(object_info[0]) + \
             '/' + str(object_info[4])
+
 
     def test_run_A5(self):
 
@@ -271,74 +243,53 @@ class kb_A5Test(unittest.TestCase):
             ],
             'phiX_A5_output',
             {'contigs':
-             [{'name': 'node0_4_2_358413',
-               'length': 5469,
-               'id': 'node0_4_2_358413',
-               'md5': '4e1621ec0c74d80ec4fbb205feee68e2'
+             [{'name': 'scaffold1.1|size5470',
+               'length': 5470,
+               'id': 'scaffold1.1|size5470',
+               'md5': '641f2667745c013ff3b703bff85880a9'
                }],
-             'md5': 'f0fbe971bd000f78d7c602a2a6926a3a',
-             'remote_md5': '801512cb01b3f8c5d1740a8bca083056'
+             'md5': '7191669cf01cf715b3f8535e1b184892',
+             'remote_md5': '92205aac3c6fbbda5ae0c12f44a999b7'
              },
             200 )
 
-        '''
-        [ {'libfile_library':'phiX_reads',
-               'libfile_unpaired': 'small_single_reads',
-               'libfile_insert': 300 },
-              {'libfile_library': 'small_reads',
-               'libfile_insert': 500}
-            ],
-        self.run_success(
-            ['phiX_reads', 'small_reads'],
-            'phiX_A5_output',
-            {'contigs':
-                 [{'name': 'node0_4_2_358413',
-                   'length': 5469,
-                   'id': 'node0_4_2_358413',
-                   'md5': '4e1621ec0c74d80ec4fbb205feee68e2'
-                   }],
-             'md5': 'f0fbe971bd000f78d7c602a2a6926a3a',
-             'remote_md5': '801512cb01b3f8c5d1740a8bca083056'
-             },
-            200)
-        '''
 
-    '''
     def test_no_workspace_param(self):
 
         self.run_error(
-            ['foo'], 'workspace_name parameter is required', wsname=None)
+            [{'libfile_library':'foo'}], 'workspace_name parameter is required', wsname=None)
 
 
     def test_no_workspace_name(self):
 
         self.run_error(
-            ['foo'], 'workspace_name parameter is required', wsname='None')
+            [{'libfile_library': 'foo'}], 'workspace_name parameter is required', wsname='None')
 
 
     def test_bad_workspace_name(self):
 
-        self.run_error(['foo'], 'Invalid workspace name bad|name',
+        self.run_error([{'libfile_library':'foo'}], 'Invalid workspace name bad|name',
                        wsname='bad|name')
 
 
     def test_non_extant_workspace(self):
 
         self.run_error(
-            ['foo'], 'Object foo cannot be accessed: No workspace with name ' +
+            [{'libfile_library': 'foo'}], 'Object foo cannot be accessed: No workspace with name ' +
             'Ireallyhopethisworkspacedoesntexistorthistestwillfail exists',
             wsname='Ireallyhopethisworkspacedoesntexistorthistestwillfail',
             exception=WorkspaceError)
 
+
     def test_no_libs_param(self):
 
-        self.run_error(None, 'read_libraries parameter is required')
+        self.run_error(None, 'libfile_args parameter is required')
 
 
     def test_non_extant_lib(self):
 
         self.run_error(
-            ['foo'],
+            [{'libfile_library': 'foo'}],
             ('No object with name foo exists in workspace {} ' +
              '(name {})').format(str(self.wsinfo[0]), self.wsinfo[1]),
             exception=WorkspaceError)
@@ -352,22 +303,36 @@ class kb_A5Test(unittest.TestCase):
     def test_no_output_param(self):
 
         self.run_error(
-            ['foo'], 'output_contigset_name parameter is required',
+            [{'libfile_library': 'foo'}], 'output_contigset_name parameter is required',
             output_name=None)
 
     def test_invalid_min_contig(self):
 
         self.run_error(
-            ['foo'], 'min_contig must be of type int', wsname='fake', output_name='test-output',
-            min_contig_len='not an int!', opt_args=None)
+            [{'libfile_library': 'foo'}], 'min_contig must be of type int', wsname='fake', output_name='test-output',
+            min_contig_len='not an int!', pipeline_args=None)
 
 
-    def run_error(self, readnames, error, wsname=('fake'), output_name='out',
-                  min_contig_len=0, opt_args=None, exception=ValueError):
+    def test_invalid_step_begin(self):
+
+        self.run_error(
+            ['foo'], 'Step begin value must be of type int', wsname='fake', output_name='test-output',
+            min_contig_len=0, pipeline_args={'step_begin': 'not int', 'step_end': 0})
+
+
+    def test_invalid_step_end(self):
+
+        self.run_error(
+            ['foo'], 'Step end value must be of type int', wsname='fake', output_name='test-output',
+            min_contig_len=0, pipeline_args={'step_begin': 0, 'step_end': 'not int'})
+
+
+    def run_error(self, libfile_args, error, wsname=('fake'), output_name='out',
+                  min_contig_len=0, pipeline_args=None, exception=ValueError):
 
         test_name = inspect.stack()[1][3]
         print('\n***** starting expected fail test: ' + test_name + ' *****')
-        print('    libs: ' + str(readnames))
+        print('    libs: ' + str(libfile_args))
 
         if wsname == ('fake'):
             wsname = self.getWsName()
@@ -379,23 +344,22 @@ class kb_A5Test(unittest.TestCase):
             else:
                 params['workspace_name'] = wsname
 
-        if (readnames is not None):
-            params['read_libraries'] = readnames
+        if (libfile_args is not None):
+            params['libfile_args'] = libfile_args
 
         if (output_name is not None):
             params['output_contigset_name'] = output_name
 
-        params['min_contig'] = min_contig_len
-        params['opt_args'] = opt_args
+        params['min_contig_length'] = min_contig_len
+        params['pipeline_args'] = pipeline_args
 
         with self.assertRaises(exception) as context:
             self.getImpl().run_A5(self.ctx, params)
         self.assertEqual(error, str(context.exception.message))
 
-    '''
 
     def run_success(self, libfile_args, output_name, expected,
-                        min_contig=None, opt_args=None, contig_count=None):
+                        min_contig=None, pipeline_args=None, contig_count=None):
 
         test_name = inspect.stack()[1][3]
         print('\n**** starting expected success test: ' + test_name + ' *****')
@@ -413,6 +377,7 @@ class kb_A5Test(unittest.TestCase):
 
         params = {'workspace_name': self.getWsName(),
                   'libfile_args': libs,
+                  'pipeline_args': pipeline_args,
                   'output_contigset_name': output_name,
                   'min_contig' : min_contig
                   }
@@ -458,23 +423,16 @@ class kb_A5Test(unittest.TestCase):
         self.nodes_to_delete.append(assembly_fasta_node)
         header = {"Authorization": "Oauth {0}".format(self.token)}
 
-        '''
-        # the remote md5 happens to be different across runs
-        fasta_node = requests.get(self.shockURL + '/node/' + assembly_fasta_node,
-                                  headers=header, allow_redirects=True).json()
-        self.assertEqual(expected['remote_md5'],
-                         fasta_node['data']['file']['checksum']['md5'])
-
         self.assertEqual(contig_count, len(assembly['data']['contigs']))
         self.assertEqual(output_name, assembly['data']['assembly_id'])
 
-        self.assertEqual(expected['md5'], assembly['data']['md5'])
+        #self.assertEqual(expected['md5'], assembly['data']['md5'])
 
         for exp_contig in expected['contigs']:
             if exp_contig['id'] in assembly['data']['contigs']:
                 obj_contig = assembly['data']['contigs'][exp_contig['id']]
                 self.assertEqual(exp_contig['name'], obj_contig['name'])
-                self.assertEqual(exp_contig['md5'], obj_contig['md5'])
+                #self.assertEqual(exp_contig['md5'], obj_contig['md5'])
                 self.assertEqual(exp_contig['length'], obj_contig['length'])
             else:
                 # Hacky way to do this, but need to see all the contig_ids
@@ -482,7 +440,7 @@ class kb_A5Test(unittest.TestCase):
                 # Need to see them to update the tests accordingly.
                 # If code gets here this test is designed to always fail, but show results.
                 self.assertEqual(str(assembly['data']['contigs']), "BLAH")
-        '''
+
 
 
 
