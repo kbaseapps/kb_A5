@@ -126,13 +126,15 @@ $output is a kb_A5.A5_Output
 A5_Params is a reference to a hash where the following keys are defined:
 	workspace_name has a value which is a string
 	output_contigset_name has a value which is a string
-	min_contig_length has a value which is an int
 	libfile_args has a value which is a reference to a list where each element is a kb_A5.libfile_args_type
+	min_contig_length has a value which is an int
+	metagenome has a value which is a kb_A5.bool
 libfile_args_type is a reference to a hash where the following keys are defined:
 	libfile_library has a value which is a kb_A5.paired_end_lib
 	libfile_unpaired has a value which is a string
 	libfile_insert has a value which is an int
 paired_end_lib is a string
+bool is an int
 A5_Output is a reference to a hash where the following keys are defined:
 	report_name has a value which is a string
 	report_ref has a value which is a string
@@ -148,13 +150,15 @@ $output is a kb_A5.A5_Output
 A5_Params is a reference to a hash where the following keys are defined:
 	workspace_name has a value which is a string
 	output_contigset_name has a value which is a string
-	min_contig_length has a value which is an int
 	libfile_args has a value which is a reference to a list where each element is a kb_A5.libfile_args_type
+	min_contig_length has a value which is an int
+	metagenome has a value which is a kb_A5.bool
 libfile_args_type is a reference to a hash where the following keys are defined:
 	libfile_library has a value which is a kb_A5.paired_end_lib
 	libfile_unpaired has a value which is a string
 	libfile_insert has a value which is an int
 paired_end_lib is a string
+bool is an int
 A5_Output is a reference to a hash where the following keys are defined:
 	report_name has a value which is a string
 	report_ref has a value which is a string
@@ -305,6 +309,38 @@ sub _validate_version {
 
 
 
+=head2 bool
+
+=over 4
+
+
+
+=item Description
+
+A boolean - 0 for false, 1 for true.
+@range (0, 1)
+
+
+=item Definition
+
+=begin html
+
+<pre>
+an int
+</pre>
+
+=end html
+
+=begin text
+
+an int
+
+=end text
+
+=back
+
+
+
 =head2 paired_end_lib
 
 =over 4
@@ -341,6 +377,11 @@ a string
 
 =over 4
 
+
+
+=item Description
+
+Parameters for a paired end library entry in the input 'libfile'
 
 
 =item Definition
@@ -380,11 +421,14 @@ libfile_insert has a value which is an int
 =item Description
 
 Input parameters for running A5.
-string workspace_name - the name of the workspace from which to take
-   input and store output.
-list<libfile_args_type> list of entries in the libfile - SingleEndLibrary or PairedEndLibrary files
-    to assemble.
-string output_contigset_name - the name of the output contigset
+ workspace_name - the name of the workspace from which to take input and store output.
+ output_contigset_name - the name of the output contigset
+ libfile_args - parameters for each input paired end reads
+ min_contig_length - minimum length of contigs in the assembly output
+ metagenome - metagenome option to A5
+
+ @optional min_contig_length
+ @optional metagenome
 
 
 =item Definition
@@ -395,8 +439,9 @@ string output_contigset_name - the name of the output contigset
 a reference to a hash where the following keys are defined:
 workspace_name has a value which is a string
 output_contigset_name has a value which is a string
-min_contig_length has a value which is an int
 libfile_args has a value which is a reference to a list where each element is a kb_A5.libfile_args_type
+min_contig_length has a value which is an int
+metagenome has a value which is a kb_A5.bool
 
 </pre>
 
@@ -407,8 +452,9 @@ libfile_args has a value which is a reference to a list where each element is a 
 a reference to a hash where the following keys are defined:
 workspace_name has a value which is a string
 output_contigset_name has a value which is a string
-min_contig_length has a value which is an int
 libfile_args has a value which is a reference to a list where each element is a kb_A5.libfile_args_type
+min_contig_length has a value which is an int
+metagenome has a value which is a kb_A5.bool
 
 
 =end text
@@ -426,9 +472,8 @@ libfile_args has a value which is a reference to a list where each element is a 
 =item Description
 
 Output parameters for A5 run.
-string report_name - the name of the KBaseReport.Report workspace
-    object.
-string report_ref - the workspace reference of the report.
+ string report_name - the name of the KBaseReport.Report workspace object.
+ string report_ref - the workspace reference of the report.
 
 
 =item Definition

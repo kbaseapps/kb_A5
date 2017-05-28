@@ -38,6 +38,11 @@ parameters :
             Minimum Contig Length
         short-hint : |
             The shortest contig to accept in the resulting assembly object
+    metagenome :
+        ui-name : |
+            Metagenome
+        short-hint : |
+            The metagenome option, enabled when checked
     libfile_library :
         ui-name : |
             Reads Library

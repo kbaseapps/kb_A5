@@ -67,6 +67,18 @@
                 "validate_as" : "int",
 		        "min_int" : 0
             }
+        },
+        {
+            "id" : "metagenome",
+            "optional" : true,
+            "advanced" : true,
+            "allow_multiple" : false,
+            "default_values" : [ "1" ],
+            "field_type" : "checkbox",
+            "checkbox_options": {
+                "checked_value": 1,
+                "unchecked_value": 0
+            }
         }
     ],
     "parameter-groups": [
@@ -99,6 +111,10 @@
                 {
                     "input_parameter": "min_contig_length",
                     "target_property": "min_contig_length"
+                },
+                {
+                    "input_parameter": "metagenome",
+                    "target_property": "metagenome"
                 }
             ],
             "output_mapping": [

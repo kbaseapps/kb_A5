@@ -16,11 +16,13 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * <p>Original spec-file type: A5_Params</p>
  * <pre>
  * Input parameters for running A5.
- * string workspace_name - the name of the workspace from which to take
- *    input and store output.
- * list<libfile_args_type> list of entries in the libfile - SingleEndLibrary or PairedEndLibrary files
- *     to assemble.
- * string output_contigset_name - the name of the output contigset
+ *  workspace_name - the name of the workspace from which to take input and store output.
+ *  output_contigset_name - the name of the output contigset
+ *  libfile_args - parameters for each input paired end reads
+ *  min_contig_length - minimum length of contigs in the assembly output
+ *  metagenome - metagenome option to A5
+ *  @optional min_contig_length
+ *  @optional metagenome
  * </pre>
  * 
  */
@@ -29,8 +31,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({
     "workspace_name",
     "output_contigset_name",
+    "libfile_args",
     "min_contig_length",
-    "libfile_args"
+    "metagenome"
 })
 public class A5Params {
 
@@ -38,10 +41,12 @@ public class A5Params {
     private String workspaceName;
     @JsonProperty("output_contigset_name")
     private String outputContigsetName;
-    @JsonProperty("min_contig_length")
-    private Long minContigLength;
     @JsonProperty("libfile_args")
     private List<LibfileArgsType> libfileArgs;
+    @JsonProperty("min_contig_length")
+    private Long minContigLength;
+    @JsonProperty("metagenome")
+    private Long metagenome;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     @JsonProperty("workspace_name")
@@ -74,21 +79,6 @@ public class A5Params {
         return this;
     }
 
-    @JsonProperty("min_contig_length")
-    public Long getMinContigLength() {
-        return minContigLength;
-    }
-
-    @JsonProperty("min_contig_length")
-    public void setMinContigLength(Long minContigLength) {
-        this.minContigLength = minContigLength;
-    }
-
-    public A5Params withMinContigLength(Long minContigLength) {
-        this.minContigLength = minContigLength;
-        return this;
-    }
-
     @JsonProperty("libfile_args")
     public List<LibfileArgsType> getLibfileArgs() {
         return libfileArgs;
@@ -104,6 +94,36 @@ public class A5Params {
         return this;
     }
 
+    @JsonProperty("min_contig_length")
+    public Long getMinContigLength() {
+        return minContigLength;
+    }
+
+    @JsonProperty("min_contig_length")
+    public void setMinContigLength(Long minContigLength) {
+        this.minContigLength = minContigLength;
+    }
+
+    public A5Params withMinContigLength(Long minContigLength) {
+        this.minContigLength = minContigLength;
+        return this;
+    }
+
+    @JsonProperty("metagenome")
+    public Long getMetagenome() {
+        return metagenome;
+    }
+
+    @JsonProperty("metagenome")
+    public void setMetagenome(Long metagenome) {
+        this.metagenome = metagenome;
+    }
+
+    public A5Params withMetagenome(Long metagenome) {
+        this.metagenome = metagenome;
+        return this;
+    }
+
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
@@ -116,7 +136,7 @@ public class A5Params {
 
     @Override
     public String toString() {
-        return ((((((((((("A5Params"+" [workspaceName=")+ workspaceName)+", outputContigsetName=")+ outputContigsetName)+", minContigLength=")+ minContigLength)+", libfileArgs=")+ libfileArgs)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((((("A5Params"+" [workspaceName=")+ workspaceName)+", outputContigsetName=")+ outputContigsetName)+", libfileArgs=")+ libfileArgs)+", minContigLength=")+ minContigLength)+", metagenome=")+ metagenome)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }

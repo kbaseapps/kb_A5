@@ -6,36 +6,55 @@ https://github.com/levinas/a5
 
 module kb_A5 {
 
-    /* The workspace object name of a PairedEndLibrary file, whether of the
+    /*
+        A boolean - 0 for false, 1 for true.
+        @range (0, 1)
+    */
+    typedef int bool;
+
+    /*
+       The workspace object name of a PairedEndLibrary file, whether of the
        KBaseAssembly or KBaseFile type.
     */
+
     typedef string paired_end_lib;
 
+    /*
+        Parameters for a paired end library entry in the input 'libfile'
+    */
+
     typedef structure {
-        paired_end_lib   libfile_library;          /* paired end */
-        string           libfile_unpaired;         /*  unpaired reads */
-        int              libfile_insert;           /*  insert value   */
+        paired_end_lib   libfile_library;    /* paired end */
+        string           libfile_unpaired;   /*  unpaired reads */
+        int              libfile_insert;     /*  insert value   */
     } libfile_args_type;
 
-    /* Input parameters for running A5.
-        string workspace_name - the name of the workspace from which to take
-           input and store output.
-        list<libfile_args_type> list of entries in the libfile - SingleEndLibrary or PairedEndLibrary files
-            to assemble.
-        string output_contigset_name - the name of the output contigset
+    /*
+       Input parameters for running A5.
+        workspace_name - the name of the workspace from which to take input and store output.
+        output_contigset_name - the name of the output contigset
+        libfile_args - parameters for each input paired end reads
+        min_contig_length - minimum length of contigs in the assembly output
+        metagenome - metagenome option to A5
+
+        @optional min_contig_length
+        @optional metagenome
     */
+
     typedef structure {
         string                   workspace_name;
         string                   output_contigset_name;    /*  name of output contigs */
-        int                      min_contig_length;        /*  (=200) minimum size of contig */
         list<libfile_args_type>  libfile_args;             /*  arguments to create the libfile */
+        int                      min_contig_length;        /*  (=200) minimum size of contig */
+        bool                     metagenome;                /*  metagenome option */
     } A5_Params;
     
-    /* Output parameters for A5 run.
-        string report_name - the name of the KBaseReport.Report workspace
-            object.
+    /*
+       Output parameters for A5 run.
+        string report_name - the name of the KBaseReport.Report workspace object.
         string report_ref - the workspace reference of the report.
     */
+
     typedef structure {
         string report_name;
         string report_ref;

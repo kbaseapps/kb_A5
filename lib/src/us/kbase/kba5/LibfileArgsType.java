@@ -13,7 +13,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
  * <p>Original spec-file type: libfile_args_type</p>
- * 
+ * <pre>
+ * Parameters for a paired end library entry in the input 'libfile'
+ * </pre>
  * 
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)

@@ -37,18 +37,22 @@ class kb_A5(object):
         """
         Run A5 on paired end libraries
         :param params: instance of type "A5_Params" (Input parameters for
-           running A5. string workspace_name - the name of the workspace from
-           which to take input and store output. list<libfile_args_type> list
-           of entries in the libfile - SingleEndLibrary or PairedEndLibrary
-           files to assemble. string output_contigset_name - the name of the
-           output contigset) -> structure: parameter "workspace_name" of
-           String, parameter "output_contigset_name" of String, parameter
-           "min_contig_length" of Long, parameter "libfile_args" of list of
-           type "libfile_args_type" -> structure: parameter "libfile_library"
-           of type "paired_end_lib" (The workspace object name of a
+           running A5. workspace_name - the name of the workspace from which
+           to take input and store output. output_contigset_name - the name
+           of the output contigset libfile_args - parameters for each input
+           paired end reads min_contig_length - minimum length of contigs in
+           the assembly output metagenome - metagenome option to A5 @optional
+           min_contig_length @optional metagenome) -> structure: parameter
+           "workspace_name" of String, parameter "output_contigset_name" of
+           String, parameter "libfile_args" of list of type
+           "libfile_args_type" (Parameters for a paired end library entry in
+           the input 'libfile') -> structure: parameter "libfile_library" of
+           type "paired_end_lib" (The workspace object name of a
            PairedEndLibrary file, whether of the KBaseAssembly or KBaseFile
            type.), parameter "libfile_unpaired" of String, parameter
-           "libfile_insert" of Long
+           "libfile_insert" of Long, parameter "min_contig_length" of Long,
+           parameter "metagenome" of type "bool" (A boolean - 0 for false, 1
+           for true. @range (0, 1))
         :returns: instance of type "A5_Output" (Output parameters for A5 run.
            string report_name - the name of the KBaseReport.Report workspace
            object. string report_ref - the workspace reference of the

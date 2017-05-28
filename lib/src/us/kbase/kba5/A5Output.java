@@ -15,9 +15,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * <p>Original spec-file type: A5_Output</p>
  * <pre>
  * Output parameters for A5 run.
- * string report_name - the name of the KBaseReport.Report workspace
- *     object.
- * string report_ref - the workspace reference of the report.
+ *  string report_name - the name of the KBaseReport.Report workspace object.
+ *  string report_ref - the workspace reference of the report.
  * </pre>
  * 
  */

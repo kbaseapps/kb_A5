@@ -43,7 +43,7 @@ https://github.com/levinas/a5
     ######################################### noqa
     VERSION = "0.0.1"
     GIT_URL = "https://github.com/kbaseapps/kb_A5.git"
-    GIT_COMMIT_HASH = "093f6339049387e2381a16ffeb9f7d59a9c6f492"
+    GIT_COMMIT_HASH = "133529613cba4163e314095f564573734ff5f74b"
 
     #BEGIN_CLASS_HEADER
     # Class variables and functions can be defined in this block
@@ -52,6 +52,7 @@ https://github.com/levinas/a5
     PARAM_IN_WS = 'workspace_name'
     PARAM_IN_CS_NAME = 'output_contigset_name'
     PARAM_IN_MIN_CONTIG = 'min_contig_length'
+    PARAM_IN_METAGENOME = 'metagenome'
     PARAM_IN_LIBFILE_ARGS = 'libfile_args'
     PARAM_IN_LIBRARY = 'libfile_library'
     PARAM_IN_UNPAIRED = 'libfile_unpaired'
@@ -163,6 +164,9 @@ https://github.com/levinas/a5
 
         output_files_prefix = params[self.PARAM_IN_CS_NAME]
         a5_cmd = ['a5_pipeline.pl']
+
+        if self.PARAM_IN_METAGENOME in params and test_params[self.PARAM_IN_METAGENOME]:
+            a5_cmd.append('--metagenome')
 
         a5_cmd.append(libfile),
         a5_cmd.append(output_files_prefix)
@@ -331,18 +335,22 @@ https://github.com/levinas/a5
         """
         Run A5 on paired end libraries
         :param params: instance of type "A5_Params" (Input parameters for
-           running A5. string workspace_name - the name of the workspace from
-           which to take input and store output. list<libfile_args_type> list
-           of entries in the libfile - SingleEndLibrary or PairedEndLibrary
-           files to assemble. string output_contigset_name - the name of the
-           output contigset) -> structure: parameter "workspace_name" of
-           String, parameter "output_contigset_name" of String, parameter
-           "min_contig_length" of Long, parameter "libfile_args" of list of
-           type "libfile_args_type" -> structure: parameter "libfile_library"
-           of type "paired_end_lib" (The workspace object name of a
+           running A5. workspace_name - the name of the workspace from which
+           to take input and store output. output_contigset_name - the name
+           of the output contigset libfile_args - parameters for each input
+           paired end reads min_contig_length - minimum length of contigs in
+           the assembly output metagenome - metagenome option to A5 @optional
+           min_contig_length @optional metagenome) -> structure: parameter
+           "workspace_name" of String, parameter "output_contigset_name" of
+           String, parameter "libfile_args" of list of type
+           "libfile_args_type" (Parameters for a paired end library entry in
+           the input 'libfile') -> structure: parameter "libfile_library" of
+           type "paired_end_lib" (The workspace object name of a
            PairedEndLibrary file, whether of the KBaseAssembly or KBaseFile
            type.), parameter "libfile_unpaired" of String, parameter
-           "libfile_insert" of Long
+           "libfile_insert" of Long, parameter "min_contig_length" of Long,
+           parameter "metagenome" of type "bool" (A boolean - 0 for false, 1
+           for true. @range (0, 1))
         :returns: instance of type "A5_Output" (Output parameters for A5 run.
            string report_name - the name of the KBaseReport.Report workspace
            object. string report_ref - the workspace reference of the
