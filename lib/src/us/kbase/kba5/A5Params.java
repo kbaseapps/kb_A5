@@ -30,8 +30,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "workspace_name",
     "output_contigset_name",
     "min_contig_length",
-    "libfile_args",
-    "pipeline_args"
+    "libfile_args"
 })
 public class A5Params {
 
@@ -43,13 +42,6 @@ public class A5Params {
     private Long minContigLength;
     @JsonProperty("libfile_args")
     private List<LibfileArgsType> libfileArgs;
-    /**
-     * <p>Original spec-file type: pipeline_args_type</p>
-     * 
-     * 
-     */
-    @JsonProperty("pipeline_args")
-    private PipelineArgsType pipelineArgs;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     @JsonProperty("workspace_name")
@@ -112,31 +104,6 @@ public class A5Params {
         return this;
     }
 
-    /**
-     * <p>Original spec-file type: pipeline_args_type</p>
-     * 
-     * 
-     */
-    @JsonProperty("pipeline_args")
-    public PipelineArgsType getPipelineArgs() {
-        return pipelineArgs;
-    }
-
-    /**
-     * <p>Original spec-file type: pipeline_args_type</p>
-     * 
-     * 
-     */
-    @JsonProperty("pipeline_args")
-    public void setPipelineArgs(PipelineArgsType pipelineArgs) {
-        this.pipelineArgs = pipelineArgs;
-    }
-
-    public A5Params withPipelineArgs(PipelineArgsType pipelineArgs) {
-        this.pipelineArgs = pipelineArgs;
-        return this;
-    }
-
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
@@ -149,7 +116,7 @@ public class A5Params {
 
     @Override
     public String toString() {
-        return ((((((((((((("A5Params"+" [workspaceName=")+ workspaceName)+", outputContigsetName=")+ outputContigsetName)+", minContigLength=")+ minContigLength)+", libfileArgs=")+ libfileArgs)+", pipelineArgs=")+ pipelineArgs)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((("A5Params"+" [workspaceName=")+ workspaceName)+", outputContigsetName=")+ outputContigsetName)+", minContigLength=")+ minContigLength)+", libfileArgs=")+ libfileArgs)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }

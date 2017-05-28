@@ -17,11 +17,6 @@ module kb_A5 {
         int              libfile_insert;           /*  insert value   */
     } libfile_args_type;
 
-    typedef structure {
-        int                      step_begin;           /* pipeline step:  1 - 5  */
-        int                      step_end;             /* pipeline step:  1 - 5  */
-    } pipeline_args_type;
-
     /* Input parameters for running A5.
         string workspace_name - the name of the workspace from which to take
            input and store output.
@@ -31,10 +26,9 @@ module kb_A5 {
     */
     typedef structure {
         string                   workspace_name;
-        string                   output_contigset_name;         /*  name of output contigs */
-        int                      min_contig_length;             /*  (=200) minimum size of contig */
-        list<libfile_args_type>  libfile_args;                  /*  arguments to create the libfile */
-        pipeline_args_type       pipeline_args;                 /*  begin and end of pipeline steps */
+        string                   output_contigset_name;    /*  name of output contigs */
+        int                      min_contig_length;        /*  (=200) minimum size of contig */
+        list<libfile_args_type>  libfile_args;             /*  arguments to create the libfile */
     } A5_Params;
     
     /* Output parameters for A5 run.

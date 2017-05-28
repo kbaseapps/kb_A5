@@ -45,12 +45,10 @@ class kb_A5(object):
            String, parameter "output_contigset_name" of String, parameter
            "min_contig_length" of Long, parameter "libfile_args" of list of
            type "libfile_args_type" -> structure: parameter "libfile_library"
-           of type "single_or_paired_end_lib" (The workspace object name of a
+           of type "paired_end_lib" (The workspace object name of a
            PairedEndLibrary file, whether of the KBaseAssembly or KBaseFile
-           type.), parameter "libfile_unpaired" of type "single_end_lib",
-           parameter "libfile_insert" of Long, parameter "pipeline_args" of
-           type "pipeline_args_type" -> structure: parameter "step_begin" of
-           Long, parameter "step_end" of Long
+           type.), parameter "libfile_unpaired" of String, parameter
+           "libfile_insert" of Long
         :returns: instance of type "A5_Output" (Output parameters for A5 run.
            string report_name - the name of the KBaseReport.Report workspace
            object. string report_ref - the workspace reference of the

@@ -128,16 +128,11 @@ A5_Params is a reference to a hash where the following keys are defined:
 	output_contigset_name has a value which is a string
 	min_contig_length has a value which is an int
 	libfile_args has a value which is a reference to a list where each element is a kb_A5.libfile_args_type
-	pipeline_args has a value which is a kb_A5.pipeline_args_type
 libfile_args_type is a reference to a hash where the following keys are defined:
-	libfile_library has a value which is a kb_A5.single_or_paired_end_lib
-	libfile_unpaired has a value which is a kb_A5.single_end_lib
+	libfile_library has a value which is a kb_A5.paired_end_lib
+	libfile_unpaired has a value which is a string
 	libfile_insert has a value which is an int
-single_or_paired_end_lib is a string
-single_end_lib is a string
-pipeline_args_type is a reference to a hash where the following keys are defined:
-	step_begin has a value which is an int
-	step_end has a value which is an int
+paired_end_lib is a string
 A5_Output is a reference to a hash where the following keys are defined:
 	report_name has a value which is a string
 	report_ref has a value which is a string
@@ -155,16 +150,11 @@ A5_Params is a reference to a hash where the following keys are defined:
 	output_contigset_name has a value which is a string
 	min_contig_length has a value which is an int
 	libfile_args has a value which is a reference to a list where each element is a kb_A5.libfile_args_type
-	pipeline_args has a value which is a kb_A5.pipeline_args_type
 libfile_args_type is a reference to a hash where the following keys are defined:
-	libfile_library has a value which is a kb_A5.single_or_paired_end_lib
-	libfile_unpaired has a value which is a kb_A5.single_end_lib
+	libfile_library has a value which is a kb_A5.paired_end_lib
+	libfile_unpaired has a value which is a string
 	libfile_insert has a value which is an int
-single_or_paired_end_lib is a string
-single_end_lib is a string
-pipeline_args_type is a reference to a hash where the following keys are defined:
-	step_begin has a value which is an int
-	step_end has a value which is an int
+paired_end_lib is a string
 A5_Output is a reference to a hash where the following keys are defined:
 	report_name has a value which is a string
 	report_ref has a value which is a string
@@ -315,7 +305,7 @@ sub _validate_version {
 
 
 
-=head2 single_or_paired_end_lib
+=head2 paired_end_lib
 
 =over 4
 
@@ -325,32 +315,6 @@ sub _validate_version {
 
 The workspace object name of a PairedEndLibrary file, whether of the
 KBaseAssembly or KBaseFile type.
-
-
-=item Definition
-
-=begin html
-
-<pre>
-a string
-</pre>
-
-=end html
-
-=begin text
-
-a string
-
-=end text
-
-=back
-
-
-
-=head2 single_end_lib
-
-=over 4
-
 
 
 =item Definition
@@ -385,8 +349,8 @@ a string
 
 <pre>
 a reference to a hash where the following keys are defined:
-libfile_library has a value which is a kb_A5.single_or_paired_end_lib
-libfile_unpaired has a value which is a kb_A5.single_end_lib
+libfile_library has a value which is a kb_A5.paired_end_lib
+libfile_unpaired has a value which is a string
 libfile_insert has a value which is an int
 
 </pre>
@@ -396,41 +360,9 @@ libfile_insert has a value which is an int
 =begin text
 
 a reference to a hash where the following keys are defined:
-libfile_library has a value which is a kb_A5.single_or_paired_end_lib
-libfile_unpaired has a value which is a kb_A5.single_end_lib
+libfile_library has a value which is a kb_A5.paired_end_lib
+libfile_unpaired has a value which is a string
 libfile_insert has a value which is an int
-
-
-=end text
-
-=back
-
-
-
-=head2 pipeline_args_type
-
-=over 4
-
-
-
-=item Definition
-
-=begin html
-
-<pre>
-a reference to a hash where the following keys are defined:
-step_begin has a value which is an int
-step_end has a value which is an int
-
-</pre>
-
-=end html
-
-=begin text
-
-a reference to a hash where the following keys are defined:
-step_begin has a value which is an int
-step_end has a value which is an int
 
 
 =end text
@@ -465,7 +397,6 @@ workspace_name has a value which is a string
 output_contigset_name has a value which is a string
 min_contig_length has a value which is an int
 libfile_args has a value which is a reference to a list where each element is a kb_A5.libfile_args_type
-pipeline_args has a value which is a kb_A5.pipeline_args_type
 
 </pre>
 
@@ -478,7 +409,6 @@ workspace_name has a value which is a string
 output_contigset_name has a value which is a string
 min_contig_length has a value which is an int
 libfile_args has a value which is a reference to a list where each element is a kb_A5.libfile_args_type
-pipeline_args has a value which is a kb_A5.pipeline_args_type
 
 
 =end text

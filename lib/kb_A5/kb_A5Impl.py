@@ -8,19 +8,13 @@ import uuid
 from pprint import pformat
 from pprint import pprint
 from biokbase.workspace.client import Workspace as workspaceService
-import requests
-import json
-import psutil
 import subprocess
 import numpy as np
 from ReadsUtils.ReadsUtilsClient import ReadsUtils
 from ReadsUtils.baseclient import ServerError
 from AssemblyUtil.AssemblyUtilClient import AssemblyUtil
 from KBaseReport.KBaseReportClient import KBaseReport
-from KBaseReport.baseclient import ServerError as _RepError
 from kb_quast.kb_quastClient import kb_quast
-from kb_quast.baseclient import ServerError as QUASTError
-from kb_ea_utils.kb_ea_utilsClient import kb_ea_utils
 import time
 from datetime import datetime
 
@@ -48,20 +42,16 @@ https://github.com/levinas/a5
     # the latter method is running.
     ######################################### noqa
     VERSION = "0.0.1"
-    GIT_URL = "https://github.com/ugswork/kb_A5.git"
-    GIT_COMMIT_HASH = "9fe7c2398ff0c0917675299fad188fc579a75f4e"
+    GIT_URL = "https://github.com/kbaseapps/kb_A5.git"
+    GIT_COMMIT_HASH = "093f6339049387e2381a16ffeb9f7d59a9c6f492"
 
     #BEGIN_CLASS_HEADER
     # Class variables and functions can be defined in this block
-    DISABLE_MINIMAP_OUTPUT = False  # should be False in production
     DISABLE_A5_OUTPUT = False  # should be False in production
 
     PARAM_IN_WS = 'workspace_name'
     PARAM_IN_CS_NAME = 'output_contigset_name'
     PARAM_IN_MIN_CONTIG = 'min_contig_length'
-    PARAM_IN_PIPELINE_ARGS = 'pipeline_args'
-    PARAM_IN_BEGIN = 'step_begin'
-    PARAM_IN_END = 'step_end'
     PARAM_IN_LIBFILE_ARGS = 'libfile_args'
     PARAM_IN_LIBRARY = 'libfile_library'
     PARAM_IN_UNPAIRED = 'libfile_unpaired'
@@ -174,12 +164,6 @@ https://github.com/levinas/a5
         output_files_prefix = params[self.PARAM_IN_CS_NAME]
         a5_cmd = ['a5_pipeline.pl']
 
-        if self.PARAM_IN_PIPELINE_ARGS in params and params[self.PARAM_IN_PIPELINE_ARGS] is not None:
-            beginVal = params[self.PARAM_IN_PIPELINE_ARGS][self.PARAM_IN_BEGIN]
-            endVal = params[self.PARAM_IN_PIPELINE_ARGS][self.PARAM_IN_END]
-            a5_cmd.append('--begin=' + str(beginVal))
-            a5_cmd.append('--end=' + str(endVal))
-
         a5_cmd.append(libfile),
         a5_cmd.append(output_files_prefix)
 
@@ -201,9 +185,12 @@ https://github.com/levinas/a5
 
 
     # adapted from
-    # https://github.com/kbase/transform/blob/master/plugins/scripts/convert/trns_transform_KBaseFile_AssemblyFile_to_KBaseGenomes_ContigSet.py
+    # https://github.com/kbase/transform/blob/master/plugins/scripts/convert/
+    # trns_transform_KBaseFile_AssemblyFile_to_KBaseGenomes_ContigSet.py
     # which was adapted from an early version of
-    # https://github.com/kbase/transform/blob/master/plugins/scripts/upload/trns_transform_FASTA_DNA_Assembly_to_KBaseGenomes_ContigSet.py
+    # https://github.com/kbase/transform/blob/master/plugins/scripts/upload/
+    # trns_transform_FASTA_DNA_Assembly_to_KBaseGenomes_ContigSet.py
+
     def load_stats(self, input_file_name):
         self.log('Starting conversion of FASTA to KBaseGenomeAnnotations.Assembly')
         self.log('Building Object.')
@@ -321,12 +308,6 @@ https://github.com/levinas/a5
             if not isinstance(params[self.PARAM_IN_MIN_CONTIG], int):
                 raise ValueError('min_contig must be of type int')
 
-        if self.PARAM_IN_PIPELINE_ARGS in params and params[self.PARAM_IN_PIPELINE_ARGS] is not None:
-            if not isinstance(params[self.PARAM_IN_PIPELINE_ARGS][self.PARAM_IN_BEGIN], int):
-                raise ValueError('Step begin value must be of type int')
-            if not isinstance(params[self.PARAM_IN_PIPELINE_ARGS][self.PARAM_IN_END], int):
-                raise ValueError('Step end value must be of type int')
-
 
     #END_CLASS_HEADER
 
@@ -358,12 +339,10 @@ https://github.com/levinas/a5
            String, parameter "output_contigset_name" of String, parameter
            "min_contig_length" of Long, parameter "libfile_args" of list of
            type "libfile_args_type" -> structure: parameter "libfile_library"
-           of type "single_or_paired_end_lib" (The workspace object name of a
+           of type "paired_end_lib" (The workspace object name of a
            PairedEndLibrary file, whether of the KBaseAssembly or KBaseFile
-           type.), parameter "libfile_unpaired" of type "single_end_lib",
-           parameter "libfile_insert" of Long, parameter "pipeline_args" of
-           type "pipeline_args_type" -> structure: parameter "step_begin" of
-           Long, parameter "step_end" of Long
+           type.), parameter "libfile_unpaired" of String, parameter
+           "libfile_insert" of Long
         :returns: instance of type "A5_Output" (Output parameters for A5 run.
            string report_name - the name of the KBaseReport.Report workspace
            object. string report_ref - the workspace reference of the
@@ -404,7 +383,7 @@ https://github.com/levinas/a5
 
         # parse the output and save back to KBase
 
-        output_contigs = os.path.join(outdir, a5_output_prefix + ".final.scaffolds.fasta")
+        output_contigs = os.path.join(outdir, a5_output_prefix + ".contigs.fasta")
 
         min_contig_len = 0
 

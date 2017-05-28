@@ -38,16 +38,6 @@ parameters :
             Minimum Contig Length
         short-hint : |
             The shortest contig to accept in the resulting assembly object
-    step_begin :
-        ui-name : |
-            Begin
-        short-hint : |
-            Pipeline step to begin
-    step_end :
-        ui-name : |
-            End
-        short-hint : |
-            Pipeline step to end
     libfile_library :
         ui-name : |
             Reads Library
@@ -69,12 +59,6 @@ parameter-groups :
         ui-name : Input Libraries
         short-hint : |
             Input libraries
-
-    pipeline_args :
-        ui-name : Pipeline Parameters
-        short-hint : |
-            Steps of assembly pipeline to begin and end
-
 
 #
 # Configure the display and description of parameters

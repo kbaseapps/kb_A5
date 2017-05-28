@@ -243,12 +243,12 @@ class kb_A5Test(unittest.TestCase):
             ],
             'phiX_A5_output',
             {'contigs':
-             [{'name': 'scaffold1.1|size5470',
-               'length': 5470,
-               'id': 'scaffold1.1|size5470',
-               'md5': '641f2667745c013ff3b703bff85880a9'
+             [{'name': 'scaffold_0',
+               'length': 5469,
+               'id': 'scaffold_0',
+               'md5': 'c56ff48c6205e08b20668ec9d9bef437'
                }],
-             'md5': '7191669cf01cf715b3f8535e1b184892',
+             'md5': 'a4e586937454c45341082c876be12f18',
              'remote_md5': '92205aac3c6fbbda5ae0c12f44a999b7'
              },
             200 )
@@ -306,29 +306,16 @@ class kb_A5Test(unittest.TestCase):
             [{'libfile_library': 'foo'}], 'output_contigset_name parameter is required',
             output_name=None)
 
+
     def test_invalid_min_contig(self):
 
         self.run_error(
             [{'libfile_library': 'foo'}], 'min_contig must be of type int', wsname='fake', output_name='test-output',
-            min_contig_len='not an int!', pipeline_args=None)
-
-
-    def test_invalid_step_begin(self):
-
-        self.run_error(
-            ['foo'], 'Step begin value must be of type int', wsname='fake', output_name='test-output',
-            min_contig_len=0, pipeline_args={'step_begin': 'not int', 'step_end': 0})
-
-
-    def test_invalid_step_end(self):
-
-        self.run_error(
-            ['foo'], 'Step end value must be of type int', wsname='fake', output_name='test-output',
-            min_contig_len=0, pipeline_args={'step_begin': 0, 'step_end': 'not int'})
+            min_contig_len='not an int!')
 
 
     def run_error(self, libfile_args, error, wsname=('fake'), output_name='out',
-                  min_contig_len=0, pipeline_args=None, exception=ValueError):
+                  min_contig_len=0, exception=ValueError):
 
         test_name = inspect.stack()[1][3]
         print('\n***** starting expected fail test: ' + test_name + ' *****')
@@ -351,7 +338,6 @@ class kb_A5Test(unittest.TestCase):
             params['output_contigset_name'] = output_name
 
         params['min_contig_length'] = min_contig_len
-        params['pipeline_args'] = pipeline_args
 
         with self.assertRaises(exception) as context:
             self.getImpl().run_A5(self.ctx, params)
@@ -359,7 +345,7 @@ class kb_A5Test(unittest.TestCase):
 
 
     def run_success(self, libfile_args, output_name, expected,
-                        min_contig=None, pipeline_args=None, contig_count=None):
+                        min_contig=None, contig_count=None):
 
         test_name = inspect.stack()[1][3]
         print('\n**** starting expected success test: ' + test_name + ' *****')
@@ -377,7 +363,6 @@ class kb_A5Test(unittest.TestCase):
 
         params = {'workspace_name': self.getWsName(),
                   'libfile_args': libs,
-                  'pipeline_args': pipeline_args,
                   'output_contigset_name': output_name,
                   'min_contig' : min_contig
                   }
@@ -426,14 +411,14 @@ class kb_A5Test(unittest.TestCase):
         self.assertEqual(contig_count, len(assembly['data']['contigs']))
         self.assertEqual(output_name, assembly['data']['assembly_id'])
 
-        #self.assertEqual(expected['md5'], assembly['data']['md5'])
+        self.assertEqual(expected['md5'], assembly['data']['md5'])
 
         for exp_contig in expected['contigs']:
             if exp_contig['id'] in assembly['data']['contigs']:
                 obj_contig = assembly['data']['contigs'][exp_contig['id']]
                 self.assertEqual(exp_contig['name'], obj_contig['name'])
-                #self.assertEqual(exp_contig['md5'], obj_contig['md5'])
                 self.assertEqual(exp_contig['length'], obj_contig['length'])
+                self.assertEqual(exp_contig['md5'], obj_contig['md5'])
             else:
                 # Hacky way to do this, but need to see all the contig_ids
                 # They changed because the IDBA version changed and

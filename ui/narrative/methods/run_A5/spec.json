@@ -67,32 +67,6 @@
                 "validate_as" : "int",
 		        "min_int" : 0
             }
-        },
-        {
-            "id": "step_begin",
-            "optional": true,
-            "advanced": true,
-            "allow_multiple": false,
-            "default_values": [ "1" ],
-            "field_type": "text",
-            "text_options": {
-                "validate_as" : "int",
-		        "min_int" : 1,
-                "max_int" : 5
-            }
-        },
-        {
-            "id": "step_end",
-            "optional": true,
-            "advanced": true,
-            "allow_multiple": false,
-            "default_values": [ "5" ],
-            "field_type": "text",
-            "text_options": {
-                "validate_as" : "int",
-		        "min_int" : 1,
-                "max_int" : 5
-            }
         }
     ],
     "parameter-groups": [
@@ -101,14 +75,6 @@
 	      "parameters": ["libfile_library", "libfile_unpaired", "libfile_insert"],
 	      "optional": false,
 	      "allow_multiple": true,
-	      "with_border": true
-	    },
-        {
-	      "id": "pipeline_args",
-	      "parameters": ["step_begin","step_end"],
-	      "optional": true,
-            "advanced": true,
-	      "allow_multiple": false,
 	      "with_border": true
 	    }
     ],
@@ -121,10 +87,6 @@
                 {
                     "input_parameter": "libfile_args",
                     "target_property": "libfile_args"
-                },
-                {
-                    "input_parameter": "pipeline_args",
-                    "target_property": "pipeline_args"
                 },
                 {
                     "narrative_system_variable": "workspace",
