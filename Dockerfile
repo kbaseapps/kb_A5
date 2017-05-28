@@ -25,9 +25,11 @@ RUN pip install requests --upgrade \
 
 # Install A5
 RUN cd /opt \
-    && git clone https://github.com/levinas/a5.git
+    && wget https://sourceforge.net/projects/ngopt/files/a5_miseq_linux_20160825.tar.gz \
+    && tar zxvf a5_miseq_linux_20160825.tar.gz \
+    && rm -f a5_miseq_linux_20160825.tar.gz
 
-ENV PATH $PATH:/opt/a5/bin
+ENV PATH $PATH:/opt/a5_miseq_linux_20160825/bin
 
 COPY ./ /kb/module
 RUN mkdir -p /kb/module/work
