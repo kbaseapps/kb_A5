@@ -1,7 +1,7 @@
 #
 # define display information
 #
-name: Assemble with A5
+name: Assemble with A5 v20160825
 tooltip: |
     Assemble paired-end microbial reads using the A5 assembly pipeline.
 screenshots: []
