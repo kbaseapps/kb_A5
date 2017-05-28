@@ -165,7 +165,7 @@ https://github.com/levinas/a5
         output_files_prefix = params[self.PARAM_IN_CS_NAME]
         a5_cmd = ['a5_pipeline.pl']
 
-        if self.PARAM_IN_METAGENOME in params and test_params[self.PARAM_IN_METAGENOME]:
+        if self.PARAM_IN_METAGENOME in params and params[self.PARAM_IN_METAGENOME]:
             a5_cmd.append('--metagenome')
 
         a5_cmd.append(libfile),
@@ -180,6 +180,7 @@ https://github.com/levinas/a5
                                      stdout=null, stderr=null)
         else:
             p = subprocess.Popen(a5_cmd, cwd=outdir, shell=False)
+            
         retcode = p.wait()
 
         self.log('Return code: ' + str(retcode))
