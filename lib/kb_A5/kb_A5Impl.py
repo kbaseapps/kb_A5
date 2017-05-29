@@ -17,6 +17,7 @@ from KBaseReport.KBaseReportClient import KBaseReport
 from kb_quast.kb_quastClient import kb_quast
 import time
 from datetime import datetime
+import psutil
 
 class ShockException(Exception):
     pass
@@ -31,8 +32,8 @@ class kb_A5:
 
     Module Description:
     A KBase module: kb_A5
-A simple wrapper for A5 Assembler
-https://github.com/levinas/a5
+    A simple wrapper for A5 Assembler
+    https://github.com/levinas/a5
     '''
 
     ######## WARNING FOR GEVENT USERS ####### noqa
@@ -61,6 +62,8 @@ https://github.com/levinas/a5
 
     INVALID_WS_OBJ_NAME_RE = re.compile('[^\\w\\|._-]')
     INVALID_WS_NAME_RE = re.compile('[^\\w:._-]')
+
+    THREADS_PER_CORE = 3
 
     URL_WS = 'workspace-url'
     URL_SHOCK = 'shock-url'
@@ -165,6 +168,9 @@ https://github.com/levinas/a5
         output_files_prefix = params[self.PARAM_IN_CS_NAME]
         a5_cmd = ['a5_pipeline.pl']
 
+        threads = psutil.cpu_count() * self.THREADS_PER_CORE
+        a5_cmd.append('--threads=' + str(threads))
+
         if self.PARAM_IN_METAGENOME in params and params[self.PARAM_IN_METAGENOME]:
             a5_cmd.append('--metagenome')
 
@@ -180,7 +186,7 @@ https://github.com/levinas/a5
                                      stdout=null, stderr=null)
         else:
             p = subprocess.Popen(a5_cmd, cwd=outdir, shell=False)
-            
+
         retcode = p.wait()
 
         self.log('Return code: ' + str(retcode))
