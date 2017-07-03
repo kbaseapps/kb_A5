@@ -63,7 +63,7 @@ class kb_A5:
     INVALID_WS_OBJ_NAME_RE = re.compile('[^\\w\\|._-]')
     INVALID_WS_NAME_RE = re.compile('[^\\w:._-]')
 
-    THREADS_PER_CORE = 3
+    THREADS_PER_CORE = 1
 
     URL_WS = 'workspace-url'
     URL_SHOCK = 'shock-url'
