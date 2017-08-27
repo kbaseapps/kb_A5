@@ -1,0 +1,20 @@
+[run]
+branch = True
+
+omit =
+    /kb/module/lib/kb_A5/authclient.py
+    /kb/module/lib/kb_A5/baseclient.py
+    /kb/module/lib/kb_A5/kb_A5Client.py
+    /kb/module/lib/kb_A5/kb_A5Server.py
+source = /kb/module/lib/kb_A5
+
+
+[report]
+# Regexes for lines to exclude from consideration
+exclude_lines =
+    # Have to re-enable the standard pragma
+    pragma: no cover
+    # Don't complain if tests don't hit defensive assertion code:
+    raise NotImplementedError
+
+show_missing = 1

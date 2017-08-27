@@ -1,45 +1,68 @@
 language: python
 
 python:
-    - "2.7"
+- '2.7'
 
 sudo: required
 
 services:
-    - docker
+- docker
 
 notifications:
   email:
     recipients:
-      - umaganapathyswork@gmail.com
-    on_success: never # default: change
-    on_failure: always # default: always
+    - umaganapathyswork@gmail.com
+    on_success: never
+    on_failure: always
 
 env:
   global:
+    secure: OHvUI4ur0IjcvGCf+GSiWepXcvrDc/3mzVo/NFsh4w93UVqkDcxVDpLmbIflz2WlA3x3nHfChhsG5QmEw8+HLfBR90VjammEWXwYuB6/UR67U8zX8QXIi7jHvVSk8BJkPOURaXroR6fa46fGjbIQ/Y+EmNC/XTfjVjHEwc6c30ldzmRpfZCaiP4noIZC/LZiYIPtovtDNO6N4BtAIZ/LtxDktOUwQsOP2K88OTVi2fEJBwz6dCZstOPjIfIyiWglYzstSjdG9tJOHH0HBCLIpIgAxiLcnfly4ngab+Usjx8DfPaxwz0+s0HJxlUY03vB3NoyiCST7f/DUw79IayVgvNkmW1n2PDOI+zvV+GxkqqCnfqH6+cZqycsuug7E1ZibqY3HMBkCWRnaMdxfeGH45+skifErF74RlLRg3OyBx5lLaWq4gn4Iw/EylHcH2yxmCYpzMao77zwc3Rul3Mi6U+jZdtIAWrfHcFJPWO4izlEu/CsAHevyzMpyYnseKxw6mI3U9F/hsi2FCwwDCpq7oMWP3JufMwuXe6Qxt+/UkgWwM7OYu4lWAEerbiTKPTX/gsNgX2rv5ytz4/JZ8LmfsXiauhGwOpexlZTvPtsdf/cilKBul3ki6MDiSNRt7hQNk5HmGbEPWt4tsMwSMn+qABVp1Z60lZR0DcHIK12jew=
 
 branches:
   only:
-    - master
+  - master
 
 before_install:
-    - docker version
-    - python --version
+- docker version
+- python --version
+- javac -version
+- java -version
 
 install:
-    - git clone https://github.com/kbase/jars
-    - git clone https://github.com/kbase/kb_sdk
-    - cd kb_sdk
-    - make
-    - make sdkbase
-    - docker images
-    - export PATH=$(pwd)/bin:$PATH
-    - cd ../
-    - git clone https://github.com/kbaseapps/kb_MiniASM.git
-    - cd kb_MiniASM
+- pip install coveralls
+- git clone https://github.com/kbase/jars
+- git clone https://github.com/kbase/kb_sdk
+- cd kb_sdk
+- make
+- make sdkbase
+- docker images
+- export PATH=$(pwd)/bin:$PATH
+- cd ../
+- git clone https://github.com/kbaseapps/kb_A5.git
+- cd kb_A5
+- kb-sdk test || true
+- sed -i "s/test_token=/test_token=$TEST_TOKEN/" test_local/test.cfg
+- sed -i 's\https://appdev.kbase.us/services\https://ci.kbase.us/services\' test_local/test.cfg
+- sed -i 's\https://appdev.kbase.us/services/auth/api/legacy/KBase/Sessions/Login\https://ci.kbase.us/services/auth/api/legacy/KBase/Sessions/Login\'
+  test_local/test.cfg
+- sed -i 's/$(id -u)/0:0/' test_local/run_tests.sh
+- pwd=$(pwd)
+- echo "#!/bin/bash" >> test_local/run_subjob.sh
+- echo -e "$pwd/test_local/run_docker.sh run --rm --user 0:0 -v $pwd/test_local/subjobs/\$1/workdir:/kb/module/work
+  -v $pwd/test_local/workdir/tmp:/kb/module/work/tmp \$4 -e \"SDK_CALLBACK_URL=\$3\"
+  \$2 async" >> test_local/run_subjob.sh
+- cat test_local/run_subjob.sh
 
 script:
-    - kb-sdk validate
+- kb-sdk test
 
 after_success:
-
+- cp test_local/workdir/.coverage .
+- sudo mkdir -p /kb/module/lib/
+- sudo cp -R test_local/workdir/kb/module/lib/kb_A5 /kb/module/lib/
+- pwd
+- ls -l /kb/module/lib/kb_A5
+- cat .coverage
+- coverage report -m
+- coveralls
