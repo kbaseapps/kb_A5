@@ -3,8 +3,8 @@
     "authors": [
         "umaganapathyswork"
     ],
-    "contact": "help@kbase.us",
-    "categories": ["active", "assembly", "communities"],
+    "contact": "http://kbase.us/contact-us/",
+    "categories": ["active", "assembly"],
     "widgets": {
         "input": null,
         "output": "no-display"
